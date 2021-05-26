@@ -18,7 +18,8 @@ use Illuminate\Support\Facades\Route;
 //     return $request->user();
 
 
-
+// Route::get('fuzzy', 'Api\FuzziApiController@index')->name('fuzzy');
+Route::get('fuzzy', 'Api\FuzzyController@index')->name('fuzzy');
 
 // });
 
