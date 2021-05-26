@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-class FuzzifikasiController extends Controller
+class FuzziApiController extends Controller
 {
     //
 }
