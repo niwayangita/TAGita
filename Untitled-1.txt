@@ -2418,7 +2418,5 @@ class FuzzyController extends Controller
         return response()->json($hasilInferensi);
         //return response()->json([$dk_rendahE, $dk_sedangE, $dk_tinggiE]);
     }
-    function CNO(){
-        
-    }
+    //function ()
 }
