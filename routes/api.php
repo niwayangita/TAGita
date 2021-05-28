@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\Route;
 
 
 // Route::get('fuzzy', 'Api\FuzziApiController@index')->name('fuzzy');
-Route::get('fuzzy', 'Api\FuzzyController@index')->name('fuzzy');
+Route::post('fuzzy', 'Api\FuzzyController@index')->name('fuzzy');
 
 // });
 
