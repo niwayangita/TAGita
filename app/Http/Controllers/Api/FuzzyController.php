@@ -207,12 +207,11 @@ class FuzzyController extends Controller
             $dk_tinggiO = 1.0;
         }
 
-        //sistem inferensi
+        //sistem inferensi ambil data
         $hasilInferensi = DB::table('aturanB5')
             ->select('*')
             ->get();
 
-        
         foreach($hasilInferensi as $key => $value)
         {
             //pengecekan terhadap extra rendah
@@ -2408,17 +2407,18 @@ class FuzzyController extends Controller
                                         if($value->open == "tinggi"){
                                             $hasilInferensi->forget($key);
                                         }
-                                    }
-                                }
                             }
+                        }
+                    }
                 }
             }
         }
 
         return response()->json($hasilInferensi);
+
+        
+
         //return response()->json([$dk_rendahE, $dk_sedangE, $dk_tinggiE]);
     }
-    function CNO(){
-        
-    }
+    //function ()
 }
