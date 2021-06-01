@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\DB;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use PhpParser\Node\Expr\Cast\Double;
 
 class FuzzyController extends Controller
 {
@@ -9120,83 +9121,81 @@ class FuzzyController extends Controller
             $crispOutputN = 0;
             $crispOutputO = 0;
 
-            foreach($hasilInferensi as $key => $values){
+            foreach($hasilInferensi as $key => $value){
 
-                $extra = is_numeric($value->extra);
-                $agree = is_numeric($value->agree);
-                $cons = is_numeric($value->cons);
-                $neuro = is_numeric($value->neuro);
-                $open = is_numeric($value->open);
+                $extra = floatval($value->extra);
+                $agree = floatval($value->agree);
+                $cons = floatval($value->cons);
+                $neuro = floatval($value->neuro);
+                $open = floatval($value->open);
+
+                
 
                 //ambil extra
-                if($dk_rendahE == $value->extra){
-                    $crispOutputE = ($extra) * $cExtra;
+                if($extra == $dk_rendahE){
+                    $crispOutputE = $dk_rendahE * $cExtra;
                 }
-                else if ($dk_sedangE == $value->agree){
-                    $crispOutputE = ($extra) * $cExtra;
+                else if ($extra == $dk_sedangE){
+                    $crispOutputE = $dk_sedangE * $cExtra;
                 }
-                else if ($dk_tinggiE == $value->agree){
-                    $crispOutputE = ($extra) * $cExtra;
+                else if ($extra == $dk_tinggiE){
+                    $crispOutputE = $dk_tinggiE * $cExtra;
                 }
 
                 //ambil agree
-                if($dk_rendahA == $value->agree){
-                    $crispOutputA = ($agree) * $cAgree;
-                    $value->output = $crispOutputA;
+                if($agree == $dk_rendahA){
+                    $crispOutputA = ($dk_rendahA) * $cAgree;
                 }
-                else if ($dk_sedangA == $value->agree){
-                    $crispOutputA = ($agree) * $cAgree;
-                    $value->output = $crispOutputA;
+                else if ( $agree == $dk_sedangA){
+                    $crispOutputA = ($dk_sedangA) * $cAgree;
                 }
-                else if ($dk_tinggiA == $value->agree){
-                    $crispOutputA = ($agree) * $cAgree;
-                    $value->output = $crispOutputA;
+                else if ($agree == $dk_tinggiA){
+                    $crispOutputA = ($dk_tinggiA) * $cAgree;
                 }
 
                 //ambil cons
-                if($dk_rendahC == $value->agree){
-                    $crispOutputC = ($cons) * $cCons;
+                if($cons == $dk_rendahC){
+                    $crispOutputC = ($dk_rendahC) * $cCons;
                 }
-                else if ($dk_sedangC == $value->agree){
-                    $crispOutputC = ($cons) * $cCons;
+                else if ($cons == $dk_sedangC){
+                    $crispOutputC = ($dk_sedangC) * $cCons;
                 }
-                else if ($dk_tinggiC == $value->agree){
-                    $crispOutputC = ($cons) * $cCons;
+                else if ($cons == $dk_tinggiC){
+                    $crispOutputC = ($dk_tinggiC) * $cCons;
                 }
 
                 //ambil neuro
-                if($dk_rendahN == $value->neuro){
-                    $crispOutputN = ($neuro) * $cNeuro;
+                if($neuro == $dk_rendahN){
+                    $crispOutputN = ($dk_rendahN) * $cNeuro;
                 }
-                else if ($dk_sedangA == $value->agree){
-                    $crispOutputN = ($neuro) * $cNeuro;
+                else if ($neuro == $dk_sedangN){
+                    $crispOutputN = ($dk_sedangN) * $cNeuro;
                 }
-                else if ($dk_tinggiA == $value->agree){
-                    $crispOutputN = ($neuro) * $cNeuro;
+                else if ($neuro == $dk_tinggiN){
+                    $crispOutputN = ($dk_tinggiN) * $cNeuro;
                 }
 
                 //ambil open
-                if($dk_rendahO == $value->open){
-                    $crispOutputO = ($open) * $cOpen;
+                if($open == $dk_rendahO){
+                    $crispOutputO = ($dk_rendahO) * $cOpen;
                 }
-                else if ($dk_sedangO == $value->open){
-                    $crispOutputO = ($open) * $cOpen;
+                else if ($open == $dk_sedangO){
+                    $crispOutputO = ($dk_sedangO) * $cOpen;
                 }
-                else if ($dk_tinggiO == $value->agree){
-                    $crispOutputO = ($open) * $cOpen;
+                else if ($open == $dk_tinggiO){
+                    $crispOutputO = ($dk_tinggiO) * $cOpen;
                 }
 
-                $crispOutputHit = ($crispOutputE + $crispOutputA + $crispOutputC + $crispOutputN + $crispOutputO) 
-                                    / ($cExtra + $cAgree + $cCons + $cNeuro + $cAgree);
+                $pembagi = $extra + $agree + $cons + $neuro + $open;
+                //$crispOutputHit = ($crispOutputE + $crispOutputA + $crispOutputC + $crispOutputN + $crispOutputO)/$pembagi;
                 
-                // $value->output = $crispOutputHit;
+                $value->output = $pembagi;
             }
-
         }
 
         return response()->json($hasilInferensi);
 
-        //return response()->json($crispOutputHit);
+        //return response()->json($pembagi);
 
 
         //return response()->json([$dk_rendahO, $dk_sedangO, $dk_tinggiO]);
