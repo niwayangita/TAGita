@@ -9129,8 +9129,6 @@ class FuzzyController extends Controller
                 $neuro = floatval($value->neuro);
                 $open = floatval($value->open);
 
-                
-
                 //ambil extra
                 if($extra == $dk_rendahE){
                     $crispOutputE = $dk_rendahE * $cExtra;
@@ -9186,16 +9184,32 @@ class FuzzyController extends Controller
                     $crispOutputO = ($dk_tinggiO) * $cOpen;
                 }
 
-                $pembagi = $extra + $agree + $cons + $neuro + $open;
-                //$crispOutputHit = ($crispOutputE + $crispOutputA + $crispOutputC + $crispOutputN + $crispOutputO)/$pembagi;
+                //Fungsi Implikasi
+                $pembagi = ($extra + $agree + $cons + $neuro + $open);
+                $crispOutputHit = 0;
+                $output = "";
+
+                if ($pembagi != 0){
+                    $crispOutputHit = (($crispOutputE + $crispOutputA + $crispOutputC + $crispOutputN + $crispOutputO)/($pembagi));
+                    if ($crispOutputHit >= 0 & $crispOutputHit <= 30){
+                        $output = "rendah";
+                    }
+                    else if ($crispOutputHit >= 30 & $crispOutputHit <= 70){
+                        $output = "sedang";
+                    }
+                    else if ($crispOutputHit >= 70 & $crispOutputHit <= 100){
+                        $output = "tinggi";
+                    }
+                }
                 
-                $value->output = $pembagi;
+                
+                $value->output = $output;
             }
         }
 
         return response()->json($hasilInferensi);
 
-        //return response()->json($pembagi);
+        //return response()->json([$pembagi, $crispOutputHit]);
 
 
         //return response()->json([$dk_rendahO, $dk_sedangO, $dk_tinggiO]);
