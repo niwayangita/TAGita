@@ -15,6 +15,7 @@ class FuzzyController extends Controller
         $cCons = $request->crispCons;
         $cNeuro = $request->crispNeuro;
         $cOpen = $request->crispOpen;
+        
 
         $dk_rendahE = 0.0;
         $dk_sedangE = 0.0;
@@ -82,12 +83,12 @@ class FuzzyController extends Controller
 
         //fuzzifikasi conscientiousness
         $dk_rendahC = 0.0;
-        // $dk_sedangC = 0.0;
+        $dk_sedangC = 0.0;
         $dk_tinggiC = 0.0;
 
         if ($cCons<=8){
             $dk_rendahC = 1.0;
-            //$dk_sedangC = 0.0;
+            $dk_sedangC = 0.0;
             $dk_tinggiC = 0.0;
         }
         else if($cCons> 8 && $cCons<20)
@@ -213,6 +214,24 @@ class FuzzyController extends Controller
             ->select('*')
             ->get();
 
+        $kumpulan_nilai = [];
+        $arr_zAtas = [];
+        $arr_zMin = [];
+        $arr_output = [];
+        $array_sumDef = [];
+        
+        $array_nilai = [];
+
+        $array_min = [];
+
+        $neuro = 0;
+        $open = 0;
+        $cons = 0;
+        $extra = 0;
+        $agree = 0;
+
+
+        $size = sizeof($hasilInferensi);
         foreach($hasilInferensi as $key => $value)
         {
             //pengecekan terhadap extra rendah
@@ -233,10 +252,10 @@ class FuzzyController extends Controller
                     }
                 }
                 else if($value->extra == "sedang"){
-                    $value->extra = $dk_sedangE;
+                    $extra = $dk_sedangE;
                 }
                 else if($value->extra == "tinggi"){
-                    $value->extra = $dk_tinggiE;
+                    $extra = $dk_tinggiE;
                 }
 
                 //pengecekan terhadap agree rendah
@@ -257,10 +276,10 @@ class FuzzyController extends Controller
                         }
                     }
                     else if($value->agree == "sedang"){
-                        $value->agree = $dk_sedangA;
+                        $agree = $dk_sedangA;
                     }
                     else if($value->agree == "tinggi"){
-                        $value->agree = $dk_tinggiA;
+                        $agree = $dk_tinggiA;
                     }
 
                     //pengecekan terhadap cons rendah
@@ -281,10 +300,10 @@ class FuzzyController extends Controller
                             }
                         }
                         else if($value->cons == "sedang"){
-                            $value->cons = $dk_sedangC;
+                            $cons = $dk_sedangC;
                         }
                         else if($value->cons == "tinggi"){
-                            $value->cons = $dk_tinggiC;
+                            $cons = $dk_tinggiC;
                         }
                         //pengecekan terhadap neuro rendah
                         if($dk_rendahN == 0){
@@ -304,10 +323,10 @@ class FuzzyController extends Controller
                                 }
                             }
                             else if($value->neuro == "sedang"){
-                                $value->neuro = $dk_sedangN;
+                                $neuro = $dk_sedangN;
                             }
                             else if($value->neuro == "tinggi"){
-                                $value->neuro = $dk_tinggiN;
+                                $neuro = $dk_tinggiN;
                             }
                             //pengecekan terhadap open rendah
                             if($dk_rendahO == 0){
@@ -327,10 +346,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "sedang"){
-                                    $value->open = $dk_sedangO;
+                                    $open = $dk_sedangO;
                                 }
                                 else if($value->open == "tinggi"){
-                                    $value->open = $dk_tinggiO;
+                                    $open = $dk_tinggiO;
                                 }
                             }
                             //pengecekan terhadap open sedang
@@ -351,10 +370,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "rendah"){
-                                    $value->open = $dk_rendahO;
+                                    $open = $dk_rendahO;
                                 }
                                 else if($value->open == "tinggi"){
-                                    $value->open = $dk_tinggiO;
+                                    $open = $dk_tinggiO;
                                 }
                             }
                             //pengecekan terhadap open tinggi
@@ -375,10 +394,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "rendah"){
-                                    $value->neuro = $dk_rendahO;
+                                    $open = $dk_rendahO;
                                 }
                                 else if($value->open == "sedang"){
-                                    $value->neuro = $dk_sedangO;
+                                    $open = $dk_sedangO;
                                 }
                             }
                         }
@@ -400,10 +419,12 @@ class FuzzyController extends Controller
                                 }
                             }
                             else if($value->neuro == "tinggi"){
-                                $value->neuro = $dk_tinggiN;
+                                $neuro = $dk_tinggiN;
+                                
                             }
                             else if($value->neuro == "rendah"){
-                                $value->neuro = $dk_rendahN;
+                                $neuro = $dk_rendahN;
+                                
                             }
                             //pengecekan terhadap open rendah
                             if($dk_rendahO == 0){
@@ -423,10 +444,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "sedang"){
-                                    $value->open = $dk_sedangO;
+                                    $open = $dk_sedangO;
                                 }
                                 else if($value->open == "tinggi"){
-                                    $value->open = $dk_tinggiO;
+                                    $open = $dk_tinggiO;
                                 }
                             }
                             //pengecekan terhadap open sedang
@@ -447,10 +468,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "rendah"){
-                                    $value->open = $dk_rendahO;
+                                    $open = $dk_rendahO;
                                 }
                                 else if($value->open == "tinggi"){
-                                    $value->open = $dk_tinggiO;
+                                    $open = $dk_tinggiO;
                                 }
                             }
                             //pengecekan terhadap open tinggi
@@ -471,10 +492,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "rendah"){
-                                    $value->neuro = $dk_rendahO;
+                                    $open = $dk_rendahO;
                                 }
                                 else if($value->open == "sedang"){
-                                    $value->neuro = $dk_sedangO;
+                                    $open = $dk_sedangO;
                                 }
                             }
                         }
@@ -496,10 +517,10 @@ class FuzzyController extends Controller
                                 }
                             }
                             else if($value->neuro == "sedang"){
-                                $value->neuro = $dk_sedangN;
+                                $neuro = $dk_sedangN;
                             }
                             else if($value->neuro == "rendah"){
-                                $value->neuro = $dk_rendahN;
+                                $neuro = $dk_rendahN;
                             }
                             //pengecekan terhadap open rendah
                             if($dk_rendahO == 0 ){
@@ -519,10 +540,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "sedang"){
-                                    $value->open = $dk_sedangO;
+                                    $open = $dk_sedangO;
                                 }
                                 else if($value->open == "tinggi"){
-                                    $value->open = $dk_tinggiO;
+                                    $open = $dk_tinggiO;
                                 }
                             }
                             //pengecekan terhadap open sedang
@@ -543,10 +564,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "rendah"){
-                                    $value->open = $dk_rendahO;
+                                    $open = $dk_rendahO;
                                 }
                                 else if($value->open == "tinggi"){
-                                    $value->open = $dk_tinggiO;
+                                    $open = $dk_tinggiO;
                                 }
                             }
                             //pengecekan terhadap open tinggi
@@ -566,10 +587,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "rendah"){
-                                    $value->neuro = $dk_rendahO;
+                                    $open = $dk_rendahO;
                                 }
                                 else if($value->open == "sedang"){
-                                    $value->neuro = $dk_sedangO;
+                                    $open = $dk_sedangO;
                                 }
                             }
                         }
@@ -593,10 +614,10 @@ class FuzzyController extends Controller
                             }
                         }
                         else if($value->cons == "rendah"){
-                            $value->cons = $dk_rendahC;
+                            $cons = $dk_rendahC;
                         }
                         else if($value->cons == "tinggi"){
-                            $value->cons = $dk_tinggiC;
+                            $cons = $dk_tinggiC;
                         }
                         //pengecekan terhadap neuro rendah
                         if($dk_rendahN == 0){
@@ -616,10 +637,10 @@ class FuzzyController extends Controller
                                 }
                             }
                             else if($value->neuro == "sedang"){
-                                $value->neuro = $dk_sedangN;
+                                $neuro = $dk_sedangN;
                             }
                             else if($value->neuro == "tinggi"){
-                                $value->neuro = $dk_tinggiN;
+                                $neuro = $dk_tinggiN;
                             }
                             //pengecekan terhadap open rendah
                             if($dk_rendahO == 0){
@@ -639,10 +660,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "sedang"){
-                                    $value->open = $dk_sedangO;
+                                    $open = $dk_sedangO;
                                 }
                                 else if($value->open == "tinggi"){
-                                    $value->open = $dk_tinggiO;
+                                    $open = $dk_tinggiO;
                                 }
                             }
                             //pengecekan terhadap open sedang
@@ -663,10 +684,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "rendah"){
-                                    $value->open = $dk_rendahO;
+                                    $open = $dk_rendahO;
                                 }
                                 else if($value->open == "tinggi"){
-                                    $value->open = $dk_tinggiO;
+                                    $open = $dk_tinggiO;
                                 }
                             }
                             //pengecekan terhadap open tinggi
@@ -687,10 +708,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "rendah"){
-                                    $value->neuro = $dk_rendahO;
+                                    $open = $dk_rendahO;
                                 }
                                 else if($value->open == "sedang"){
-                                    $value->neuro = $dk_sedangO;
+                                    $open = $dk_sedangO;
                                 }
                             }
                         }
@@ -712,10 +733,10 @@ class FuzzyController extends Controller
                                 }
                             }
                             else if($value->neuro == "rendah"){
-                                $value->neuro = $dk_rendahN;
+                                $neuro = $dk_rendahN;
                             }
                             else if($value->neuro == "tinggi"){
-                                $value->neuro = $dk_tinggiN;
+                                $neuro = $dk_tinggiN;
                             }
                             //pengecekan terhadap open rendah
                             if($dk_rendahO == 0){
@@ -735,10 +756,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "sedang"){
-                                    $value->open = $dk_sedangO;
+                                    $open = $dk_sedangO;
                                 }
                                 else if($value->open == "tinggi"){
-                                    $value->open = $dk_tinggiO;
+                                    $open = $dk_tinggiO;
                                 }
                             }
                             //pengecekan terhadap open sedang
@@ -759,10 +780,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "rendah"){
-                                    $value->open = $dk_rendahO;
+                                    $open = $dk_rendahO;
                                 }
                                 else if($value->open == "tinggi"){
-                                    $value->open = $dk_tinggiO;
+                                    $open = $dk_tinggiO;
                                 }
                             }
                             //pengecekan terhadap open tinggi
@@ -783,10 +804,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "rendah"){
-                                    $value->neuro = $dk_rendahO;
+                                    $open = $dk_rendahO;
                                 }
                                 else if($value->open == "sedang"){
-                                    $value->neuro = $dk_sedangO;
+                                    $open = $dk_sedangO;
                                 }
                             }
                         }
@@ -808,10 +829,10 @@ class FuzzyController extends Controller
                                 }
                             }
                             else if($value->neuro == "rendah"){
-                                $value->cons = $dk_rendahN;
+                                $neuro = $dk_rendahN;
                             }
                             else if($value->neuro == "sedang"){
-                                $value->cons = $dk_sedangN;
+                                $neuro = $dk_sedangN;
                             }
                             //pengecekan terhadap open rendah
                             if($dk_rendahO == 0){
@@ -831,10 +852,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "sedang"){
-                                    $value->open = $dk_sedangO;
+                                    $open = $dk_sedangO;
                                 }
                                 else if($value->open == "tinggi"){
-                                    $value->open = $dk_tinggiO;
+                                    $open = $dk_tinggiO;
                                 }
                             }
                             //pengecekan terhadap open sedang
@@ -855,10 +876,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "rendah"){
-                                    $value->open = $dk_rendahO;
+                                    $open = $dk_rendahO;
                                 }
                                 else if($value->open == "tinggi"){
-                                    $value->open = $dk_tinggiO;
+                                    $open = $dk_tinggiO;
                                 }
                             }
                             //pengecekan terhadap open tinggi
@@ -879,10 +900,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "rendah"){
-                                    $value->open = $dk_rendahO;
+                                    $open = $dk_rendahO;
                                 }
                                 else if($value->open == "sedang"){
-                                    $value->open = $dk_sedangO;
+                                    $open = $dk_sedangO;
                                 }
                             }
                         }
@@ -905,10 +926,10 @@ class FuzzyController extends Controller
                             }
                         }
                         else if($value->cons == "rendah"){
-                            $value->cons = $dk_rendahC;
+                            $cons = $dk_rendahC;
                         }
                         else if($value->cons == "sedang"){
-                            $value->cons = $dk_sedangC;
+                            $cons = $dk_sedangC;
                         }
                         //pengecekan terhadap neuro rendah
                         if($dk_rendahN == 0){
@@ -928,10 +949,10 @@ class FuzzyController extends Controller
                                 }
                             }
                             else if($value->neuro == "tinggi"){
-                                $value->neuro = $dk_tinggiN;
+                                $neuro = $dk_tinggiN;
                             }
                             else if($value->neuro == "sedang"){
-                                $value->neuro = $dk_sedangN;
+                                $neuro = $dk_sedangN;
                             }
                             //pengecekan terhadap open rendah
                             if($dk_rendahO == 0){
@@ -951,10 +972,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "tinggi"){
-                                    $value->open = $dk_tinggiO;
+                                    $open = $dk_tinggiO;
                                 }
                                 else if($value->open == "sedang"){
-                                    $value->open = $dk_sedangO;
+                                    $open = $dk_sedangO;
                                 }
                             }
                             //pengecekan terhadap open sedang
@@ -975,10 +996,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "tinggi"){
-                                    $value->open = $dk_tinggiO;
+                                    $open = $dk_tinggiO;
                                 }
                                 else if($value->open == "rendah"){
-                                    $value->open = $dk_rendahO;
+                                    $open = $dk_rendahO;
                                 }
                             }
                             //pengecekan terhadap open tinggi
@@ -999,10 +1020,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "sedang"){
-                                    $value->open = $dk_sedangO;
+                                    $open = $dk_sedangO;
                                 }
                                 else if($value->open == "rendah"){
-                                    $value->open = $dk_rendahO;
+                                    $open = $dk_rendahO;
                                 }
                             }
                         }
@@ -1024,10 +1045,10 @@ class FuzzyController extends Controller
                                 }
                             }
                             else if($value->neuro == "tinggi"){
-                                $value->neuro = $dk_tinggiN;
+                                $neuro = $dk_tinggiN;
                             }
                             else if($value->neuro == "rendah"){
-                                $value->neuro = $dk_rendahN;
+                                $neuro = $dk_rendahN;
                             }
                             //pengecekan terhadap open rendah
                             if($dk_rendahO == 0){
@@ -1047,10 +1068,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "sedang"){
-                                    $value->open = $dk_sedangO;
+                                    $open = $dk_sedangO;
                                 }
                                 else if($value->open == "tinggi"){
-                                    $value->open = $dk_tinggiO;
+                                    $open = $dk_tinggiO;
                                 }
                             }
                             //pengecekan terhadap open sedang
@@ -1071,10 +1092,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "rendah"){
-                                    $value->open = $dk_rendahO;
+                                    $open = $dk_rendahO;
                                 }
                                 else if($value->open == "tinggi"){
-                                    $value->open = $dk_tinggiO;
+                                    $open = $dk_tinggiO;
                                 }
                             }
                             //pengecekan terhadap open tinggi
@@ -1095,10 +1116,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "sedang"){
-                                    $value->open = $dk_sedangO;
+                                    $open = $dk_sedangO;
                                 }
                                 else if($value->open == "rendah"){
-                                    $value->open = $dk_rendahO;
+                                    $open = $dk_rendahO;
                                 }
                             }
                         }
@@ -1120,10 +1141,10 @@ class FuzzyController extends Controller
                                 }
                             }
                             else if($value->neuro == "rendah"){
-                                $value->cons = $dk_rendahN;
+                                $neuro = $dk_rendahN;
                             }
                             else if($value->neuro == "sedang"){
-                                $value->cons = $dk_sedangN;
+                                $neuro = $dk_sedangN;
                             }
                             //pengecekan terhadap open rendah
                             if($dk_rendahO == 0){
@@ -1143,10 +1164,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "sedang"){
-                                    $value->open = $dk_sedangO;
+                                    $open = $dk_sedangO;
                                 }
                                 else if($value->open == "tinggi"){
-                                    $value->open = $dk_tinggiO;
+                                    $open = $dk_tinggiO;
                                 }
                             }
                             //pengecekan terhadap open sedang
@@ -1167,10 +1188,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "rendah"){
-                                    $value->open = $dk_rendahO;
+                                    $open = $dk_rendahO;
                                 }
                                 else if($value->open == "tinggi"){
-                                    $value->open = $dk_tinggiO;
+                                    $open = $dk_tinggiO;
                                 }
                             }
                             //pengecekan terhadap open tinggi
@@ -1191,10 +1212,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "sedang"){
-                                    $value->open = $dk_sedangO;
+                                    $open = $dk_sedangO;
                                 }
                                 else if($value->open == "rendah"){
-                                    $value->open = $dk_rendahO;
+                                    $open = $dk_rendahO;
                                 }
                             }
                         }
@@ -1218,10 +1239,10 @@ class FuzzyController extends Controller
                         }
                     }
                     else if($value->agree == "rendah"){
-                        $value->agree = $dk_rendahA;
+                        $agree = $dk_rendahA;
                     }
                     else if($value->agree == "tinggi"){
-                        $value->agree = $dk_tinggiA;
+                        $agree = $dk_tinggiA;
                     }
                     //pengecekan terhadap cons rendah
                     if($dk_rendahC == 0){
@@ -1241,10 +1262,10 @@ class FuzzyController extends Controller
                             }
                         }
                         else if($value->cons == "sedang"){
-                            $value->cons = $dk_sedangC;
+                            $cons = $dk_sedangC;
                         }
                         else if($value->cons == "tinggi"){
-                            $value->cons = $dk_tinggiC;
+                            $cons = $dk_tinggiC;
                         }
                         //pengecekan terhadap neuro rendah
                         if($dk_rendahN == 0){
@@ -1264,10 +1285,10 @@ class FuzzyController extends Controller
                                 }
                             }
                             else if($value->neuro == "tinggi"){
-                                $value->neuro = $dk_tinggiN;
+                                $neuro = $dk_tinggiN;
                             }
                             else if($value->neuro == "sedang"){
-                                $value->neuro = $dk_sedangN;
+                                $neuro = $dk_sedangN;
                             }
                             //pengecekan terhadap open rendah
                             if($dk_rendahO == 0){
@@ -1287,10 +1308,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "sedang"){
-                                    $value->open = $dk_sedangO;
+                                    $open = $dk_sedangO;
                                 }
                                 else if($value->open == "tinggi"){
-                                    $value->open = $dk_tinggiO;
+                                    $open = $dk_tinggiO;
                                 }
                             }
                             //pengecekan terhadap open sedang
@@ -1311,10 +1332,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "rendah"){
-                                    $value->open = $dk_rendahO;
+                                    $open = $dk_rendahO;
                                 }
                                 else if($value->open == "tinggi"){
-                                    $value->open = $dk_tinggiO;
+                                    $open = $dk_tinggiO;
                                 }
                             }
                             //pengecekan terhadap open tinggi
@@ -1335,10 +1356,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "sedang"){
-                                    $value->open = $dk_sedangO;
+                                    $open = $dk_sedangO;
                                 }
                                 else if($value->open == "rendah"){
-                                    $value->open = $dk_rendahO;
+                                    $open = $dk_rendahO;
                                 }
                             }
                         }
@@ -1360,10 +1381,10 @@ class FuzzyController extends Controller
                                 }
                             }
                             else if($value->neuro == "tinggi"){
-                                $value->neuro = $dk_tinggiN;
+                                $neuro = $dk_tinggiN;
                             }
                             else if($value->neuro == "rendah"){
-                                $value->neuro = $dk_rendahN;
+                                $neuro = $dk_rendahN;
                             }
                             //pengecekan terhadap open rendah
                             if($dk_rendahO == 0){
@@ -1383,10 +1404,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "sedang"){
-                                    $value->open = $dk_sedangO;
+                                    $open = $dk_sedangO;
                                 }
                                 else if($value->open == "tinggi"){
-                                    $value->open = $dk_tinggiO;
+                                    $open = $dk_tinggiO;
                                 }
                             }
                             //pengecekan terhadap open sedang
@@ -1407,10 +1428,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "rendah"){
-                                    $value->open = $dk_rendahO;
+                                    $open = $dk_rendahO;
                                 }
                                 else if($value->open == "tinggi"){
-                                    $value->open = $dk_tinggiO;
+                                    $open = $dk_tinggiO;
                                 }
                             }
                             //pengecekan terhadap open tinggi
@@ -1431,10 +1452,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "sedang"){
-                                    $value->open = $dk_sedangO;
+                                    $open = $dk_sedangO;
                                 }
                                 else if($value->open == "rendah"){
-                                    $value->open = $dk_rendahO;
+                                    $open = $dk_rendahO;
                                 }
                             }
                         }
@@ -1456,10 +1477,10 @@ class FuzzyController extends Controller
                                 }
                             }
                             else if($value->neuro == "rendah"){
-                                $value->cons = $dk_rendahN;
+                                $neuro = $dk_rendahN;;
                             }
                             else if($value->neuro == "sedang"){
-                                $value->cons = $dk_sedangN;
+                                $neuro = $dk_sedangN;
                             }
                             //pengecekan terhadap open rendah
                             if($dk_rendahO == 0){
@@ -1479,10 +1500,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "sedang"){
-                                    $value->open = $dk_sedangO;
+                                    $open = $dk_sedangO;
                                 }
                                 else if($value->open == "tinggi"){
-                                    $value->open = $dk_tinggiO;
+                                    $open = $dk_tinggiO;
                                 }
                             }
                             //pengecekan terhadap open sedang
@@ -1503,10 +1524,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "rendah"){
-                                    $value->open = $dk_rendahO;
+                                    $open = $dk_rendahO;
                                 }
                                 else if($value->open == "tinggi"){
-                                    $value->open = $dk_tinggiO;
+                                    $open = $dk_tinggiO;
                                 }
                             }
                             //pengecekan terhadap open tinggi
@@ -1527,10 +1548,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "sedang"){
-                                    $value->open = $dk_sedangO;
+                                    $open = $dk_sedangO;
                                 }
                                 else if($value->open == "rendah"){
-                                    $value->open = $dk_rendahO;
+                                    $open = $dk_rendahO;
                                 }
                             }
                         }
@@ -1554,10 +1575,10 @@ class FuzzyController extends Controller
                             }
                         }
                         else if($value->cons == "rendah"){
-                            $value->cons = $dk_rendahC;
+                            $cons = $dk_rendahC;
                         }
                         else if($value->cons == "tinggi"){
-                            $value->cons = $dk_tinggiC;
+                            $cons = $dk_tinggiC;
                         }
                         //pengecekan terhadap neuro rendah
                         if($dk_rendahN == 0){
@@ -1577,10 +1598,10 @@ class FuzzyController extends Controller
                                 }
                             }
                             else if($value->neuro == "tinggi"){
-                                $value->neuro = $dk_tinggiN;
+                                $neuro = $dk_tinggiN;
                             }
                             else if($value->neuro == "sedang"){
-                                $value->neuro = $dk_sedangN;
+                                $neuro = $dk_sedangN;
                             }
                             //pengecekan terhadap open rendah
                             if($dk_rendahO == 0){
@@ -1600,10 +1621,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "sedang"){
-                                    $value->open = $dk_sedangO;
+                                    $open = $dk_sedangO;
                                 }
                                 else if($value->open == "tinggi"){
-                                    $value->open = $dk_tinggiO;
+                                    $open = $dk_tinggiO;
                                 }
                             }
                             //pengecekan terhadap open sedang
@@ -1624,10 +1645,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "rendah"){
-                                    $value->open = $dk_rendahO;
+                                    $open = $dk_rendahO;
                                 }
                                 else if($value->open == "tinggi"){
-                                    $value->open = $dk_tinggiO;
+                                    $open = $dk_tinggiO;
                                 }
                             }
                             //pengecekan terhadap open tinggi
@@ -1648,10 +1669,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "sedang"){
-                                    $value->open = $dk_sedangO;
+                                    $open = $dk_sedangO;
                                 }
                                 else if($value->open == "rendah"){
-                                    $value->open = $dk_rendahO;
+                                    $open = $dk_rendahO;
                                 }
                             }
                         }
@@ -1673,10 +1694,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->neuro == "tinggi"){
-                                    $value->neuro = $dk_tinggiN;
+                                    $neuro = $dk_tinggiN;
                                 }
                                 else if($value->neuro == "rendah"){
-                                    $value->neuro = $dk_rendahN;
+                                    $neuro = $dk_rendahN;
                                 }
                                 //pengecekan terhadap open rendah
                                 if($dk_rendahO == 0){
@@ -1696,10 +1717,10 @@ class FuzzyController extends Controller
                                         }
                                     }
                                     else if($value->open == "sedang"){
-                                        $value->open = $dk_sedangO;
+                                        $open = $dk_sedangO;
                                     }
                                     else if($value->open == "tinggi"){
-                                        $value->open = $dk_tinggiO;
+                                        $open = $dk_tinggiO;
                                     }
                                 }
                                 //pengecekan terhadap open sedang
@@ -1720,10 +1741,10 @@ class FuzzyController extends Controller
                                         }
                                     }
                                     else if($value->open == "rendah"){
-                                        $value->open = $dk_rendahO;
+                                        $open = $dk_rendahO;
                                     }
                                     else if($value->open == "tinggi"){
-                                        $value->open = $dk_tinggiO;
+                                        $open = $dk_tinggiO;
                                     }
                                 }
                                 //pengecekan terhadap open tinggi
@@ -1744,10 +1765,10 @@ class FuzzyController extends Controller
                                         }
                                     }
                                     else if($value->open == "sedang"){
-                                        $value->open = $dk_sedangO;
+                                        $open = $dk_sedangO;
                                     }
                                     else if($value->open == "rendah"){
-                                        $value->open = $dk_rendahO;
+                                        $open = $dk_rendahO;
                                     }
                                 }
                             }
@@ -1769,10 +1790,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->neuro == "rendah"){
-                                    $value->cons = $dk_rendahN;
+                                    $neuro = $dk_rendahN;;
                                 }
                                 else if($value->neuro == "sedang"){
-                                    $value->cons = $dk_sedangN;
+                                    $neuro = $dk_sedangN;
                                 }
                                 //pengecekan terhadap open rendah
                                 if($dk_rendahO == 0){
@@ -1792,10 +1813,10 @@ class FuzzyController extends Controller
                                         }
                                     }
                                     else if($value->open == "sedang"){
-                                        $value->open = $dk_sedangO;
+                                        $open = $dk_sedangO;
                                     }
                                     else if($value->open == "tinggi"){
-                                        $value->open = $dk_tinggiO;
+                                        $open = $dk_tinggiO;
                                     }
                                 }
                                 //pengecekan terhadap open sedang
@@ -1816,10 +1837,10 @@ class FuzzyController extends Controller
                                         }
                                     }
                                     else if($value->open == "rendah"){
-                                        $value->open = $dk_rendahO;
+                                        $open = $dk_rendahO;
                                     }
                                     else if($value->open == "tinggi"){
-                                        $value->open = $dk_tinggiO;
+                                        $open = $dk_tinggiO;
                                     }
                                 }
                                 //pengecekan terhadap open tinggi
@@ -1840,10 +1861,10 @@ class FuzzyController extends Controller
                                         }
                                     }
                                     else if($value->open == "sedang"){
-                                        $value->open = $dk_sedangO;
+                                        $open = $dk_sedangO;
                                     }
                                     else if($value->open == "rendah"){
-                                        $value->open = $dk_rendahO;
+                                        $open = $dk_rendahO;
                                     }
                                 }
                             }
@@ -1866,10 +1887,10 @@ class FuzzyController extends Controller
                                 }
                             }
                             else if($value->cons == "rendah"){
-                                $value->cons = $dk_rendahC;
+                                $cons = $dk_rendahC;
                             }
                             else if($value->cons == "sedang"){
-                                $value->cons = $dk_sedangC;
+                                $cons = $dk_sedangC;
                             }
                             //pengecekan terhadap neuro rendah
                             if($dk_rendahN == 0){
@@ -1889,10 +1910,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->neuro == "tinggi"){
-                                    $value->neuro = $dk_tinggiN;
+                                    $neuro = $dk_tinggiN;
                                 }
                                 else if($value->neuro == "sedang"){
-                                    $value->neuro = $dk_sedangN;
+                                    $neuro = $dk_sedangN;
                                 }
                                 //pengecekan terhadap open rendah
                                 if($dk_rendahO == 0){
@@ -1912,10 +1933,10 @@ class FuzzyController extends Controller
                                         }
                                     }
                                     else if($value->open == "tinggi"){
-                                        $value->open = $dk_tinggiO;
+                                        $open = $dk_tinggiO;
                                     }
                                     else if($value->open == "sedang"){
-                                        $value->open = $dk_sedangO;
+                                        $open = $dk_sedangO;
                                     }
                                 }
                                 //pengecekan terhadap open sedang
@@ -1936,10 +1957,10 @@ class FuzzyController extends Controller
                                         }
                                     }
                                     else if($value->open == "tinggi"){
-                                        $value->open = $dk_tinggiO;
+                                        $open = $dk_tinggiO;
                                     }
                                     else if($value->open == "rendah"){
-                                        $value->open = $dk_rendahO;
+                                        $open = $dk_rendahO;
                                     }
                                 }
                                 //pengecekan terhadap open tinggi
@@ -1960,10 +1981,10 @@ class FuzzyController extends Controller
                                         }
                                     }
                                     else if($value->open == "sedang"){
-                                        $value->open = $dk_sedangO;
+                                        $open = $dk_sedangO;
                                     }
                                     else if($value->open == "rendah"){
-                                        $value->open = $dk_rendahO;
+                                        $open = $dk_rendahO;
                                     }
                                 }
                             }
@@ -1985,10 +2006,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->neuro == "tinggi"){
-                                    $value->neuro = $dk_tinggiN;
+                                    $neuro = $dk_tinggiN;
                                 }
                                 else if($value->neuro == "rendah"){
-                                    $value->neuro = $dk_rendahN;
+                                    $neuro = $dk_rendahN;
                                 }
                                 //pengecekan terhadap open rendah
                                 if($dk_rendahO == 0){
@@ -2008,10 +2029,10 @@ class FuzzyController extends Controller
                                         }
                                     }
                                     else if($value->open == "sedang"){
-                                        $value->open = $dk_sedangO;
+                                        $open = $dk_sedangO;
                                     }
                                     else if($value->open == "tinggi"){
-                                        $value->open = $dk_tinggiO;
+                                        $open = $dk_tinggiO;
                                     }
                                 }
                                 //pengecekan terhadap open sedang
@@ -2032,10 +2053,10 @@ class FuzzyController extends Controller
                                         }
                                     }
                                     else if($value->open == "rendah"){
-                                        $value->open = $dk_rendahO;
+                                        $open = $dk_rendahO;
                                     }
                                     else if($value->open == "tinggi"){
-                                        $value->open = $dk_tinggiO;
+                                        $open = $dk_tinggiO;
                                     }
                                 }
                                 //pengecekan terhadap open tinggi
@@ -2056,10 +2077,10 @@ class FuzzyController extends Controller
                                         }
                                     }
                                     else if($value->open == "sedang"){
-                                        $value->open = $dk_sedangO;
+                                        $open = $dk_sedangO;
                                     }
                                     else if($value->open == "rendah"){
-                                        $value->open = $dk_rendahO;
+                                        $open = $dk_rendahO;
                                     }
                                 }
                             }
@@ -2081,10 +2102,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->neuro == "rendah"){
-                                    $value->cons = $dk_rendahN;
+                                    $neuro = $dk_rendahN;;
                                 }
                                 else if($value->neuro == "sedang"){
-                                    $value->cons = $dk_sedangN;
+                                    $neuro = $dk_sedangN;
                                 }
                                 //pengecekan terhadap open rendah
                                 if($dk_rendahO == 0){
@@ -2104,10 +2125,10 @@ class FuzzyController extends Controller
                                         }
                                     }
                                     else if($value->open == "sedang"){
-                                        $value->open = $dk_sedangO;
+                                        $open = $dk_sedangO;
                                     }
                                     else if($value->open == "tinggi"){
-                                        $value->open = $dk_tinggiO;
+                                        $open = $dk_tinggiO;
                                     }
                                 }
                                 //pengecekan terhadap open sedang
@@ -2128,10 +2149,10 @@ class FuzzyController extends Controller
                                         }
                                     }
                                     else if($value->open == "rendah"){
-                                        $value->open = $dk_rendahO;
+                                        $open = $dk_rendahO;
                                     }
                                     else if($value->open == "tinggi"){
-                                        $value->open = $dk_tinggiO;
+                                        $open = $dk_tinggiO;
                                     }
                                 }
                                 //pengecekan terhadap open tinggi
@@ -2152,10 +2173,10 @@ class FuzzyController extends Controller
                                         }
                                     }
                                     else if($value->open == "sedang"){
-                                        $value->open = $dk_sedangO;
+                                        $open = $dk_sedangO;
                                     }
                                     else if($value->open == "rendah"){
-                                        $value->open = $dk_rendahO;
+                                        $open = $dk_rendahO;
                                     }
                                 }
                             }
@@ -2180,10 +2201,10 @@ class FuzzyController extends Controller
                         }
                     }
                     else if($value->agree == "rendah"){
-                        $value->agree = $dk_rendahA;
+                        $agree = $dk_rendahA;
                     }
                     else if($value->agree == "sedang"){
-                        $value->agree = $dk_sedangA;
+                        $agree = $dk_sedangA;
                     }
                     //pengecekan terhadap cons rendah
                     if($dk_rendahC == 0){
@@ -2203,10 +2224,10 @@ class FuzzyController extends Controller
                             }
                         }
                         else if($value->cons == "sedang"){
-                            $value->cons = $dk_sedangC;
+                            $cons = $dk_sedangC;
                         }
                         else if($value->cons == "tinggi"){
-                            $value->cons = $dk_tinggiC;
+                            $cons = $dk_tinggiC;
                         }
                         //pengecekan terhadap neuro rendah
                         if($dk_rendahN == 0){
@@ -2226,10 +2247,10 @@ class FuzzyController extends Controller
                                 }
                             }
                             else if($value->neuro == "tinggi"){
-                                $value->neuro = $dk_tinggiN;
+                                $neuro = $dk_tinggiN;
                             }
                             else if($value->neuro == "sedang"){
-                                $value->neuro = $dk_sedangN;
+                                $neuro = $dk_sedangN;
                             }
                             //pengecekan terhadap open rendah
                             if($dk_rendahO == 0){
@@ -2249,10 +2270,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "sedang"){
-                                    $value->open = $dk_sedangO;
+                                    $open = $dk_sedangO;
                                 }
                                 else if($value->open == "tinggi"){
-                                    $value->open = $dk_tinggiO;
+                                    $open = $dk_tinggiO;
                                 }
                             }
                             //pengecekan terhadap open sedang
@@ -2273,10 +2294,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "rendah"){
-                                    $value->open = $dk_rendahO;
+                                    $open = $dk_rendahO;
                                 }
                                 else if($value->open == "tinggi"){
-                                    $value->open = $dk_tinggiO;
+                                    $open = $dk_tinggiO;
                                 }
                             }
                             //pengecekan terhadap open tinggi
@@ -2297,10 +2318,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "sedang"){
-                                    $value->open = $dk_sedangO;
+                                    $open = $dk_sedangO;
                                 }
                                 else if($value->open == "rendah"){
-                                    $value->open = $dk_rendahO;
+                                    $open = $dk_rendahO;
                                 }
                             }
                         }
@@ -2322,10 +2343,10 @@ class FuzzyController extends Controller
                                 }
                             }
                             else if($value->neuro == "tinggi"){
-                                $value->neuro = $dk_tinggiN;
+                                $neuro = $dk_tinggiN;
                             }
                             else if($value->neuro == "rendah"){
-                                $value->neuro = $dk_rendahN;
+                                $neuro = $dk_rendahN;
                             }
                             //pengecekan terhadap open rendah
                             if($dk_rendahO == 0){
@@ -2345,10 +2366,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "sedang"){
-                                    $value->open = $dk_sedangO;
+                                    $open = $dk_sedangO;
                                 }
                                 else if($value->open == "tinggi"){
-                                    $value->open = $dk_tinggiO;
+                                    $open = $dk_tinggiO;
                                 }
                             }
                             //pengecekan terhadap open sedang
@@ -2369,10 +2390,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "rendah"){
-                                    $value->open = $dk_rendahO;
+                                    $open = $dk_rendahO;
                                 }
                                 else if($value->open == "tinggi"){
-                                    $value->open = $dk_tinggiO;
+                                    $open = $dk_tinggiO;
                                 }
                             }
                             //pengecekan terhadap open tinggi
@@ -2393,10 +2414,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "sedang"){
-                                    $value->open = $dk_sedangO;
+                                    $open = $dk_sedangO;
                                 }
                                 else if($value->open == "rendah"){
-                                    $value->open = $dk_rendahO;
+                                    $open = $dk_rendahO;
                                 }
                             }
                         }
@@ -2418,10 +2439,10 @@ class FuzzyController extends Controller
                                 }
                             }
                             else if($value->neuro == "rendah"){
-                                $value->cons = $dk_rendahN;
+                                $neuro = $dk_rendahN;
                             }
                             else if($value->neuro == "sedang"){
-                                $value->cons = $dk_sedangN;
+                                $neuro = $dk_sedangN;
                             }
                             //pengecekan terhadap open rendah
                             if($dk_rendahO == 0){
@@ -2441,10 +2462,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "sedang"){
-                                    $value->open = $dk_sedangO;
+                                    $open = $dk_sedangO;
                                 }
                                 else if($value->open == "tinggi"){
-                                    $value->open = $dk_tinggiO;
+                                    $open = $dk_tinggiO;
                                 }
                             }
                             //pengecekan terhadap open sedang
@@ -2465,10 +2486,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "rendah"){
-                                    $value->open = $dk_rendahO;
+                                    $open = $dk_rendahO;
                                 }
                                 else if($value->open == "tinggi"){
-                                    $value->open = $dk_tinggiO;
+                                    $open = $dk_tinggiO;
                                 }
                             }
                             //pengecekan terhadap open tinggi
@@ -2489,10 +2510,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "sedang"){
-                                    $value->open = $dk_sedangO;
+                                    $open = $dk_sedangO;
                                 }
                                 else if($value->open == "rendah"){
-                                    $value->open = $dk_rendahO;
+                                    $open = $dk_rendahO;
                                 }
                             }
                         }
@@ -2516,10 +2537,10 @@ class FuzzyController extends Controller
                             }
                         }
                         else if($value->cons == "rendah"){
-                            $value->cons = $dk_rendahC;
+                            $cons = $dk_rendahC;
                         }
                         else if($value->cons == "tinggi"){
-                            $value->cons = $dk_tinggiC;
+                            $cons = $dk_tinggiC;
                         }
                         //pengecekan terhadap neuro rendah
                         if($dk_rendahN == 0){
@@ -2539,10 +2560,10 @@ class FuzzyController extends Controller
                                 }
                             }
                             else if($value->neuro == "tinggi"){
-                                $value->neuro = $dk_tinggiN;
+                                $neuro = $dk_tinggiN;
                             }
                             else if($value->neuro == "sedang"){
-                                $value->neuro = $dk_sedangN;
+                                $neuro = $dk_sedangN;
                             }
                             //pengecekan terhadap open rendah
                             if($dk_rendahO == 0){
@@ -2562,10 +2583,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "sedang"){
-                                    $value->open = $dk_sedangO;
+                                    $open = $dk_sedangO;
                                 }
                                 else if($value->open == "tinggi"){
-                                    $value->open = $dk_tinggiO;
+                                    $open = $dk_tinggiO;
                                 }
                             }
                             //pengecekan terhadap open sedang
@@ -2586,10 +2607,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "rendah"){
-                                    $value->open = $dk_rendahO;
+                                    $open = $dk_rendahO;
                                 }
                                 else if($value->open == "tinggi"){
-                                    $value->open = $dk_tinggiO;
+                                    $open = $dk_tinggiO;
                                 }
                             }
                             //pengecekan terhadap open tinggi
@@ -2610,10 +2631,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "sedang"){
-                                    $value->open = $dk_sedangO;
+                                    $open = $dk_sedangO;
                                 }
                                 else if($value->open == "rendah"){
-                                    $value->open = $dk_rendahO;
+                                    $open = $dk_rendahO;
                                 }
                             }
                         }
@@ -2635,10 +2656,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->neuro == "tinggi"){
-                                    $value->neuro = $dk_tinggiN;
+                                    $neuro = $dk_tinggiN;
                                 }
                                 else if($value->neuro == "rendah"){
-                                    $value->neuro = $dk_rendahN;
+                                    $neuro = $dk_rendahN;
                                 }
                                 //pengecekan terhadap open rendah
                                 if($dk_rendahO == 0){
@@ -2658,10 +2679,10 @@ class FuzzyController extends Controller
                                         }
                                     }
                                     else if($value->open == "sedang"){
-                                        $value->open = $dk_sedangO;
+                                        $open = $dk_sedangO;
                                     }
                                     else if($value->open == "tinggi"){
-                                        $value->open = $dk_tinggiO;
+                                        $open = $dk_tinggiO;
                                     }
                                 }
                                 //pengecekan terhadap open sedang
@@ -2682,10 +2703,10 @@ class FuzzyController extends Controller
                                         }
                                     }
                                     else if($value->open == "rendah"){
-                                        $value->open = $dk_rendahO;
+                                        $open = $dk_rendahO;
                                     }
                                     else if($value->open == "tinggi"){
-                                        $value->open = $dk_tinggiO;
+                                        $open = $dk_tinggiO;
                                     }
                                 }
                                 //pengecekan terhadap open tinggi
@@ -2706,10 +2727,10 @@ class FuzzyController extends Controller
                                         }
                                     }
                                     else if($value->open == "sedang"){
-                                        $value->open = $dk_sedangO;
+                                        $open = $dk_sedangO;
                                     }
                                     else if($value->open == "rendah"){
-                                        $value->open = $dk_rendahO;
+                                        $open = $dk_rendahO;
                                     }
                                 }
                             }
@@ -2731,10 +2752,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->neuro == "rendah"){
-                                    $value->cons = $dk_rendahN;
+                                    $neuro = $dk_rendahN;;
                                 }
                                 else if($value->neuro == "sedang"){
-                                    $value->cons = $dk_sedangN;
+                                    $neuro = $dk_sedangN;
                                 }
                                 //pengecekan terhadap open rendah
                                 if($dk_rendahO == 0){
@@ -2754,10 +2775,10 @@ class FuzzyController extends Controller
                                         }
                                     }
                                     else if($value->open == "sedang"){
-                                        $value->open = $dk_sedangO;
+                                        $open = $dk_sedangO;
                                     }
                                     else if($value->open == "tinggi"){
-                                        $value->open = $dk_tinggiO;
+                                        $open = $dk_tinggiO;
                                     }
                                 }
                                 //pengecekan terhadap open sedang
@@ -2778,10 +2799,10 @@ class FuzzyController extends Controller
                                         }
                                     }
                                     else if($value->open == "rendah"){
-                                        $value->open = $dk_rendahO;
+                                        $open = $dk_rendahO;
                                     }
                                     else if($value->open == "tinggi"){
-                                        $value->open = $dk_tinggiO;
+                                        $open = $dk_tinggiO;
                                     }
                                 }
                                 //pengecekan terhadap open tinggi
@@ -2802,10 +2823,10 @@ class FuzzyController extends Controller
                                         }
                                     }
                                     else if($value->open == "sedang"){
-                                        $value->open = $dk_sedangO;
+                                        $open = $dk_sedangO;
                                     }
                                     else if($value->open == "rendah"){
-                                        $value->open = $dk_rendahO;
+                                        $open = $dk_rendahO;
                                     }
                                 }
                             }
@@ -2828,10 +2849,10 @@ class FuzzyController extends Controller
                                 }
                             }
                             else if($value->cons == "rendah"){
-                                $value->cons = $dk_rendahC;
+                                $cons = $dk_rendahC;
                             }
                             else if($value->cons == "sedang"){
-                                $value->cons = $dk_sedangC;
+                                $cons = $dk_sedangC;
                             }
                             //pengecekan terhadap neuro rendah
                             if($dk_rendahN == 0){
@@ -2851,10 +2872,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->neuro == "tinggi"){
-                                    $value->neuro = $dk_tinggiN;
+                                    $neuro = $dk_tinggiN;
                                 }
                                 else if($value->neuro == "sedang"){
-                                    $value->neuro = $dk_sedangN;
+                                    $neuro = $dk_sedangN;
                                 }
                                 //pengecekan terhadap open rendah
                                 if($dk_rendahO == 0){
@@ -2874,10 +2895,10 @@ class FuzzyController extends Controller
                                         }
                                     }
                                     else if($value->open == "tinggi"){
-                                        $value->open = $dk_tinggiO;
+                                        $open = $dk_tinggiO;
                                     }
                                     else if($value->open == "sedang"){
-                                        $value->open = $dk_sedangO;
+                                        $open = $dk_sedangO;
                                     }
                                 }
                                 //pengecekan terhadap open sedang
@@ -2898,10 +2919,10 @@ class FuzzyController extends Controller
                                         }
                                     }
                                     else if($value->open == "tinggi"){
-                                        $value->open = $dk_tinggiO;
+                                        $open = $dk_tinggiO;
                                     }
                                     else if($value->open == "rendah"){
-                                        $value->open = $dk_rendahO;
+                                        $open = $dk_rendahO;
                                     }
                                 }
                                 //pengecekan terhadap open tinggi
@@ -2922,10 +2943,10 @@ class FuzzyController extends Controller
                                         }
                                     }
                                     else if($value->open == "sedang"){
-                                        $value->open = $dk_sedangO;
+                                        $open = $dk_sedangO;
                                     }
                                     else if($value->open == "rendah"){
-                                        $value->open = $dk_rendahO;
+                                        $open = $dk_rendahO;
                                     }
                                 }
                             }
@@ -2947,10 +2968,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->neuro == "tinggi"){
-                                    $value->neuro = $dk_tinggiN;
+                                    $neuro = $dk_tinggiN;
                                 }
                                 else if($value->neuro == "rendah"){
-                                    $value->neuro = $dk_rendahN;
+                                    $neuro = $dk_rendahN;
                                 }
                                 //pengecekan terhadap open rendah
                                 if($dk_rendahO == 0){
@@ -2970,10 +2991,10 @@ class FuzzyController extends Controller
                                         }
                                     }
                                     else if($value->open == "sedang"){
-                                        $value->open = $dk_sedangO;
+                                        $open = $dk_sedangO;
                                     }
                                     else if($value->open == "tinggi"){
-                                        $value->open = $dk_tinggiO;
+                                        $open = $dk_tinggiO;
                                     }
                                 }
                                 //pengecekan terhadap open sedang
@@ -2994,10 +3015,10 @@ class FuzzyController extends Controller
                                         }
                                     }
                                     else if($value->open == "rendah"){
-                                        $value->open = $dk_rendahO;
+                                        $open = $dk_rendahO;
                                     }
                                     else if($value->open == "tinggi"){
-                                        $value->open = $dk_tinggiO;
+                                        $open = $dk_tinggiO;
                                     }
                                 }
                                 //pengecekan terhadap open tinggi
@@ -3018,10 +3039,10 @@ class FuzzyController extends Controller
                                         }
                                     }
                                     else if($value->open == "sedang"){
-                                        $value->open = $dk_sedangO;
+                                        $open = $dk_sedangO;
                                     }
                                     else if($value->open == "rendah"){
-                                        $value->open = $dk_rendahO;
+                                        $open = $dk_rendahO;
                                     }
                                 }
                             }
@@ -3043,10 +3064,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->neuro == "rendah"){
-                                    $value->cons = $dk_rendahN;
+                                    $neuro = $dk_rendahN;
                                 }
                                 else if($value->neuro == "sedang"){
-                                    $value->cons = $dk_sedangN;
+                                    $neuro = $dk_sedangN;
                                 }
                                 //pengecekan terhadap open rendah
                                 if($dk_rendahO == 0){
@@ -3066,10 +3087,10 @@ class FuzzyController extends Controller
                                         }
                                     }
                                     else if($value->open == "sedang"){
-                                        $value->open = $dk_sedangO;
+                                        $open = $dk_sedangO;
                                     }
                                     else if($value->open == "tinggi"){
-                                        $value->open = $dk_tinggiO;
+                                        $open = $dk_tinggiO;
                                     }
                                 }
                                 //pengecekan terhadap open sedang
@@ -3090,10 +3111,10 @@ class FuzzyController extends Controller
                                         }
                                     }
                                     else if($value->open == "rendah"){
-                                        $value->open = $dk_rendahO;
+                                        $open = $dk_rendahO;
                                     }
                                     else if($value->open == "tinggi"){
-                                        $value->open = $dk_tinggiO;
+                                        $open = $dk_tinggiO;
                                     }
                                 }
                                 //pengecekan terhadap open tinggi
@@ -3114,10 +3135,10 @@ class FuzzyController extends Controller
                                         }
                                     }
                                     else if($value->open == "sedang"){
-                                        $value->open = $dk_sedangO;
+                                        $open = $dk_sedangO;
                                     }
                                     else if($value->open == "rendah"){
-                                        $value->open = $dk_rendahO;
+                                        $open = $dk_rendahO;
                                     }
                                 }
                             }
@@ -3145,10 +3166,10 @@ class FuzzyController extends Controller
                     }
                 }
                 else if($value->extra == "rendah"){
-                    $value->extra = $dk_rendahE;
+                    $extra = $dk_rendahE;
                 }
                 else if($value->extra == "tinggi"){
-                    $value->extra = $dk_tinggiE;
+                    $extra = $dk_tinggiE;
                 }
 
                 //pengecekan terhadap agree rendah
@@ -3169,10 +3190,10 @@ class FuzzyController extends Controller
                         }
                     }
                     else if($value->agree == "sedang"){
-                        $value->agree = $dk_sedangA;
+                        $agree = $dk_sedangA;
                     }
                     else if($value->agree == "tinggi"){
-                        $value->agree = $dk_tinggiA;
+                        $agree = $dk_tinggiA;
                     }
 
                     //pengecekan terhadap cons rendah
@@ -3193,10 +3214,10 @@ class FuzzyController extends Controller
                             }
                         }
                         else if($value->cons == "sedang"){
-                            $value->cons = $dk_sedangC;
+                            $cons = $dk_sedangC;
                         }
                         else if($value->cons == "tinggi"){
-                            $value->cons = $dk_tinggiC;
+                            $cons = $dk_tinggiC;
                         }
                         //pengecekan terhadap neuro rendah
                         if($dk_rendahN == 0){
@@ -3216,10 +3237,10 @@ class FuzzyController extends Controller
                                 }
                             }
                             else if($value->neuro == "sedang"){
-                                $value->neuro = $dk_sedangN;
+                                $neuro = $dk_sedangN;
                             }
                             else if($value->neuro == "tinggi"){
-                                $value->neuro = $dk_tinggiN;
+                                $neuro = $dk_tinggiN;
                             }
                             //pengecekan terhadap open rendah
                             if($dk_rendahO == 0){
@@ -3239,10 +3260,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "sedang"){
-                                    $value->open = $dk_sedangO;
+                                    $open = $dk_sedangO;
                                 }
                                 else if($value->open == "tinggi"){
-                                    $value->open = $dk_tinggiO;
+                                    $open = $dk_tinggiO;
                                 }
                             }
                             //pengecekan terhadap open sedang
@@ -3263,10 +3284,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "rendah"){
-                                    $value->open = $dk_rendahO;
+                                    $open = $dk_rendahO;
                                 }
                                 else if($value->open == "tinggi"){
-                                    $value->open = $dk_tinggiO;
+                                    $open = $dk_tinggiO;
                                 }
                             }
                             //pengecekan terhadap open tinggi
@@ -3287,10 +3308,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "rendah"){
-                                    $value->neuro = $dk_rendahO;
+                                    $open = $dk_rendahO;
                                 }
                                 else if($value->open == "sedang"){
-                                    $value->neuro = $dk_sedangO;
+                                    $open = $dk_sedangO;
                                 }
                             }
                         }
@@ -3312,10 +3333,10 @@ class FuzzyController extends Controller
                                 }
                             }
                             else if($value->neuro == "tinggi"){
-                                $value->neuro = $dk_tinggiN;
+                                $neuro = $dk_tinggiN;
                             }
                             else if($value->neuro == "rendah"){
-                                $value->neuro = $dk_rendahN;
+                                $neuro = $dk_rendahN;
                             }
                             //pengecekan terhadap open rendah
                             if($dk_rendahO == 0){
@@ -3335,10 +3356,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "sedang"){
-                                    $value->open = $dk_sedangO;
+                                    $open = $dk_sedangO;
                                 }
                                 else if($value->open == "tinggi"){
-                                    $value->open = $dk_tinggiO;
+                                    $open = $dk_tinggiO;
                                 }
                             }
                             //pengecekan terhadap open sedang
@@ -3359,10 +3380,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "rendah"){
-                                    $value->open = $dk_rendahO;
+                                    $open = $dk_rendahO;
                                 }
                                 else if($value->open == "tinggi"){
-                                    $value->open = $dk_tinggiO;
+                                    $open = $dk_tinggiO;
                                 }
                             }
                             //pengecekan terhadap open tinggi
@@ -3383,10 +3404,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "rendah"){
-                                    $value->neuro = $dk_rendahO;
+                                    $open = $dk_rendahO;
                                 }
                                 else if($value->open == "sedang"){
-                                    $value->neuro = $dk_sedangO;
+                                    $open = $dk_sedangO;
                                 }
                             }
                         }
@@ -3408,10 +3429,10 @@ class FuzzyController extends Controller
                                 }
                             }
                             else if($value->neuro == "sedang"){
-                                $value->neuro = $dk_sedangN;
+                                $neuro = $dk_sedangN;
                             }
                             else if($value->neuro == "rendah"){
-                                $value->neuro = $dk_rendahN;
+                                $neuro = $dk_rendahN;
                             }
                             //pengecekan terhadap open rendah
                             if($dk_rendahO == 0 ){
@@ -3431,10 +3452,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "sedang"){
-                                    $value->open = $dk_sedangO;
+                                    $open = $dk_sedangO;
                                 }
                                 else if($value->open == "tinggi"){
-                                    $value->open = $dk_tinggiO;
+                                    $open = $dk_tinggiO;
                                 }
                             }
                             //pengecekan terhadap open sedang
@@ -3455,10 +3476,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "rendah"){
-                                    $value->open = $dk_rendahO;
+                                    $open = $dk_rendahO;
                                 }
                                 else if($value->open == "tinggi"){
-                                    $value->open = $dk_tinggiO;
+                                    $open = $dk_tinggiO;
                                 }
                             }
                             //pengecekan terhadap open tinggi
@@ -3478,10 +3499,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "rendah"){
-                                    $value->neuro = $dk_rendahO;
+                                    $open = $dk_rendahO;
                                 }
                                 else if($value->open == "sedang"){
-                                    $value->neuro = $dk_sedangO;
+                                    $open = $dk_sedangO;
                                 }
                             }
                         }
@@ -3505,10 +3526,10 @@ class FuzzyController extends Controller
                             }
                         }
                         else if($value->cons == "rendah"){
-                            $value->cons = $dk_rendahC;
+                            $cons = $dk_rendahC;
                         }
                         else if($value->cons == "tinggi"){
-                            $value->cons = $dk_tinggiC;
+                            $cons = $dk_tinggiC;
                         }
                         //pengecekan terhadap neuro rendah
                         if($dk_rendahN == 0){
@@ -3528,10 +3549,10 @@ class FuzzyController extends Controller
                                 }
                             }
                             else if($value->neuro == "sedang"){
-                                $value->neuro = $dk_sedangN;
+                                $neuro = $dk_sedangN;
                             }
                             else if($value->neuro == "tinggi"){
-                                $value->neuro = $dk_tinggiN;
+                                $neuro = $dk_tinggiN;
                             }
                             //pengecekan terhadap open rendah
                             if($dk_rendahO == 0){
@@ -3551,10 +3572,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "sedang"){
-                                    $value->open = $dk_sedangO;
+                                    $open = $dk_sedangO;
                                 }
                                 else if($value->open == "tinggi"){
-                                    $value->open = $dk_tinggiO;
+                                    $open = $dk_tinggiO;
                                 }
                             }
                             //pengecekan terhadap open sedang
@@ -3575,10 +3596,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "rendah"){
-                                    $value->open = $dk_rendahO;
+                                    $open = $dk_rendahO;
                                 }
                                 else if($value->open == "tinggi"){
-                                    $value->open = $dk_tinggiO;
+                                    $open = $dk_tinggiO;
                                 }
                             }
                             //pengecekan terhadap open tinggi
@@ -3599,10 +3620,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "rendah"){
-                                    $value->neuro = $dk_rendahO;
+                                    $open = $dk_rendahO;
                                 }
                                 else if($value->open == "sedang"){
-                                    $value->neuro = $dk_sedangO;
+                                    $open = $dk_sedangO;
                                 }
                             }
                         }
@@ -3624,10 +3645,10 @@ class FuzzyController extends Controller
                                 }
                             }
                             else if($value->neuro == "rendah"){
-                                $value->neuro = $dk_rendahN;
+                                $neuro = $dk_rendahN;
                             }
                             else if($value->neuro == "tinggi"){
-                                $value->neuro = $dk_tinggiN;
+                                $neuro = $dk_tinggiN;
                             }
                             //pengecekan terhadap open rendah
                             if($dk_rendahO == 0){
@@ -3647,10 +3668,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "sedang"){
-                                    $value->open = $dk_sedangO;
+                                    $open = $dk_sedangO;
                                 }
                                 else if($value->open == "tinggi"){
-                                    $value->open = $dk_tinggiO;
+                                    $open = $dk_tinggiO;
                                 }
                             }
                             //pengecekan terhadap open sedang
@@ -3671,10 +3692,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "rendah"){
-                                    $value->open = $dk_rendahO;
+                                    $open = $dk_rendahO;
                                 }
                                 else if($value->open == "tinggi"){
-                                    $value->open = $dk_tinggiO;
+                                    $open = $dk_tinggiO;
                                 }
                             }
                             //pengecekan terhadap open tinggi
@@ -3695,10 +3716,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "rendah"){
-                                    $value->neuro = $dk_rendahO;
+                                    $open = $dk_rendahO;
                                 }
                                 else if($value->open == "sedang"){
-                                    $value->neuro = $dk_sedangO;
+                                    $open = $dk_sedangO;
                                 }
                             }
                         }
@@ -3720,10 +3741,10 @@ class FuzzyController extends Controller
                                 }
                             }
                             else if($value->neuro == "rendah"){
-                                $value->cons = $dk_rendahN;
+                                $neuro = $dk_rendahN;;
                             }
                             else if($value->neuro == "sedang"){
-                                $value->cons = $dk_sedangN;
+                                $neuro = $dk_sedangN;
                             }
                             //pengecekan terhadap open rendah
                             if($dk_rendahO == 0){
@@ -3743,10 +3764,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "sedang"){
-                                    $value->open = $dk_sedangO;
+                                    $open = $dk_sedangO;
                                 }
                                 else if($value->open == "tinggi"){
-                                    $value->open = $dk_tinggiO;
+                                    $open = $dk_tinggiO;
                                 }
                             }
                             //pengecekan terhadap open sedang
@@ -3767,10 +3788,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "rendah"){
-                                    $value->open = $dk_rendahO;
+                                    $open = $dk_rendahO;
                                 }
                                 else if($value->open == "tinggi"){
-                                    $value->open = $dk_tinggiO;
+                                    $open = $dk_tinggiO;
                                 }
                             }
                             //pengecekan terhadap open tinggi
@@ -3791,10 +3812,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "rendah"){
-                                    $value->open = $dk_rendahO;
+                                    $open = $dk_rendahO;
                                 }
                                 else if($value->open == "sedang"){
-                                    $value->open = $dk_sedangO;
+                                    $open = $dk_sedangO;
                                 }
                             }
                         }
@@ -3817,10 +3838,10 @@ class FuzzyController extends Controller
                             }
                         }
                         else if($value->cons == "rendah"){
-                            $value->cons = $dk_rendahC;
+                            $cons = $dk_rendahC;
                         }
                         else if($value->cons == "sedang"){
-                            $value->cons = $dk_sedangC;
+                            $cons = $dk_sedangC;
                         }
                         //pengecekan terhadap neuro rendah
                         if($dk_rendahN == 0){
@@ -3840,10 +3861,10 @@ class FuzzyController extends Controller
                                 }
                             }
                             else if($value->neuro == "tinggi"){
-                                $value->neuro = $dk_tinggiN;
+                                $neuro = $dk_tinggiN;
                             }
                             else if($value->neuro == "sedang"){
-                                $value->neuro = $dk_sedangN;
+                                $neuro = $dk_sedangN;
                             }
                             //pengecekan terhadap open rendah
                             if($dk_rendahO == 0){
@@ -3863,10 +3884,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "tinggi"){
-                                    $value->open = $dk_tinggiO;
+                                    $open = $dk_tinggiO;
                                 }
                                 else if($value->open == "sedang"){
-                                    $value->open = $dk_sedangO;
+                                    $open = $dk_sedangO;
                                 }
                             }
                             //pengecekan terhadap open sedang
@@ -3887,10 +3908,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "tinggi"){
-                                    $value->open = $dk_tinggiO;
+                                    $open = $dk_tinggiO;
                                 }
                                 else if($value->open == "rendah"){
-                                    $value->open = $dk_rendahO;
+                                    $open = $dk_rendahO;
                                 }
                             }
                             //pengecekan terhadap open tinggi
@@ -3911,10 +3932,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "sedang"){
-                                    $value->open = $dk_sedangO;
+                                    $open = $dk_sedangO;
                                 }
                                 else if($value->open == "rendah"){
-                                    $value->open = $dk_rendahO;
+                                    $open = $dk_rendahO;
                                 }
                             }
                         }
@@ -3936,10 +3957,10 @@ class FuzzyController extends Controller
                                 }
                             }
                             else if($value->neuro == "tinggi"){
-                                $value->neuro = $dk_tinggiN;
+                                $neuro = $dk_tinggiN;
                             }
                             else if($value->neuro == "rendah"){
-                                $value->neuro = $dk_rendahN;
+                                $neuro = $dk_rendahN;
                             }
                             //pengecekan terhadap open rendah
                             if($dk_rendahO == 0){
@@ -3959,10 +3980,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "sedang"){
-                                    $value->open = $dk_sedangO;
+                                    $open = $dk_sedangO;
                                 }
                                 else if($value->open == "tinggi"){
-                                    $value->open = $dk_tinggiO;
+                                    $open = $dk_tinggiO;
                                 }
                             }
                             //pengecekan terhadap open sedang
@@ -3983,10 +4004,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "rendah"){
-                                    $value->open = $dk_rendahO;
+                                    $open = $dk_rendahO;
                                 }
                                 else if($value->open == "tinggi"){
-                                    $value->open = $dk_tinggiO;
+                                    $open = $dk_tinggiO;
                                 }
                             }
                             //pengecekan terhadap open tinggi
@@ -4007,10 +4028,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "sedang"){
-                                    $value->open = $dk_sedangO;
+                                    $open = $dk_sedangO;
                                 }
                                 else if($value->open == "rendah"){
-                                    $value->open = $dk_rendahO;
+                                    $open = $dk_rendahO;
                                 }
                             }
                         }
@@ -4032,10 +4053,10 @@ class FuzzyController extends Controller
                                 }
                             }
                             else if($value->neuro == "rendah"){
-                                $value->cons = $dk_rendahN;
+                                $neuro = $dk_rendahN;;
                             }
                             else if($value->neuro == "sedang"){
-                                $value->cons = $dk_sedangN;
+                                $neuro = $dk_sedangN;
                             }
                             //pengecekan terhadap open rendah
                             if($dk_rendahO == 0){
@@ -4055,10 +4076,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "sedang"){
-                                    $value->open = $dk_sedangO;
+                                    $open = $dk_sedangO;
                                 }
                                 else if($value->open == "tinggi"){
-                                    $value->open = $dk_tinggiO;
+                                    $open = $dk_tinggiO;
                                 }
                             }
                             //pengecekan terhadap open sedang
@@ -4079,10 +4100,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "rendah"){
-                                    $value->open = $dk_rendahO;
+                                    $open = $dk_rendahO;
                                 }
                                 else if($value->open == "tinggi"){
-                                    $value->open = $dk_tinggiO;
+                                    $open = $dk_tinggiO;
                                 }
                             }
                             //pengecekan terhadap open tinggi
@@ -4103,10 +4124,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "sedang"){
-                                    $value->open = $dk_sedangO;
+                                    $open = $dk_sedangO;
                                 }
                                 else if($value->open == "rendah"){
-                                    $value->open = $dk_rendahO;
+                                    $open = $dk_rendahO;
                                 }
                             }
                         }
@@ -4130,10 +4151,10 @@ class FuzzyController extends Controller
                         }
                     }
                     else if($value->agree == "rendah"){
-                        $value->agree = $dk_rendahA;
+                        $agree = $dk_rendahA;
                     }
                     else if($value->agree == "tinggi"){
-                        $value->agree = $dk_tinggiA;
+                        $agree = $dk_tinggiA;
                     }
                     //pengecekan terhadap cons rendah
                     if($dk_rendahC == 0){
@@ -4153,10 +4174,10 @@ class FuzzyController extends Controller
                             }
                         }
                         else if($value->cons == "sedang"){
-                            $value->cons = $dk_sedangC;
+                            $cons = $dk_sedangC;
                         }
                         else if($value->cons == "tinggi"){
-                            $value->cons = $dk_tinggiC;
+                            $cons = $dk_tinggiC;
                         }
                         //pengecekan terhadap neuro rendah
                         if($dk_rendahN == 0){
@@ -4176,10 +4197,10 @@ class FuzzyController extends Controller
                                 }
                             }
                             else if($value->neuro == "tinggi"){
-                                $value->neuro = $dk_tinggiN;
+                                $neuro = $dk_tinggiN;
                             }
                             else if($value->neuro == "sedang"){
-                                $value->neuro = $dk_sedangN;
+                                $neuro = $dk_sedangN;
                             }
                             //pengecekan terhadap open rendah
                             if($dk_rendahO == 0){
@@ -4199,10 +4220,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "sedang"){
-                                    $value->open = $dk_sedangO;
+                                    $open = $dk_sedangO;
                                 }
                                 else if($value->open == "tinggi"){
-                                    $value->open = $dk_tinggiO;
+                                    $open = $dk_tinggiO;
                                 }
                             }
                             //pengecekan terhadap open sedang
@@ -4223,10 +4244,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "rendah"){
-                                    $value->open = $dk_rendahO;
+                                    $open = $dk_rendahO;
                                 }
                                 else if($value->open == "tinggi"){
-                                    $value->open = $dk_tinggiO;
+                                    $open = $dk_tinggiO;
                                 }
                             }
                             //pengecekan terhadap open tinggi
@@ -4247,10 +4268,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "sedang"){
-                                    $value->open = $dk_sedangO;
+                                    $open = $dk_sedangO;
                                 }
                                 else if($value->open == "rendah"){
-                                    $value->open = $dk_rendahO;
+                                    $open = $dk_rendahO;
                                 }
                             }
                         }
@@ -4272,10 +4293,10 @@ class FuzzyController extends Controller
                                 }
                             }
                             else if($value->neuro == "tinggi"){
-                                $value->neuro = $dk_tinggiN;
+                                $neuro = $dk_tinggiN;
                             }
                             else if($value->neuro == "rendah"){
-                                $value->neuro = $dk_rendahN;
+                                $neuro = $dk_rendahN;
                             }
                             //pengecekan terhadap open rendah
                             if($dk_rendahO == 0){
@@ -4295,10 +4316,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "sedang"){
-                                    $value->open = $dk_sedangO;
+                                    $open = $dk_sedangO;
                                 }
                                 else if($value->open == "tinggi"){
-                                    $value->open = $dk_tinggiO;
+                                    $open = $dk_tinggiO;
                                 }
                             }
                             //pengecekan terhadap open sedang
@@ -4319,10 +4340,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "rendah"){
-                                    $value->open = $dk_rendahO;
+                                    $open = $dk_rendahO;
                                 }
                                 else if($value->open == "tinggi"){
-                                    $value->open = $dk_tinggiO;
+                                    $open = $dk_tinggiO;
                                 }
                             }
                             //pengecekan terhadap open tinggi
@@ -4343,10 +4364,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "sedang"){
-                                    $value->open = $dk_sedangO;
+                                    $open = $dk_sedangO;
                                 }
                                 else if($value->open == "rendah"){
-                                    $value->open = $dk_rendahO;
+                                    $open = $dk_rendahO;
                                 }
                             }
                         }
@@ -4368,10 +4389,10 @@ class FuzzyController extends Controller
                                 }
                             }
                             else if($value->neuro == "rendah"){
-                                $value->cons = $dk_rendahN;
+                                $neuro = $dk_rendahN;
                             }
                             else if($value->neuro == "sedang"){
-                                $value->cons = $dk_sedangN;
+                                $neuro = $dk_sedangN;
                             }
                             //pengecekan terhadap open rendah
                             if($dk_rendahO == 0){
@@ -4391,10 +4412,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "sedang"){
-                                    $value->open = $dk_sedangO;
+                                    $open = $dk_sedangO;
                                 }
                                 else if($value->open == "tinggi"){
-                                    $value->open = $dk_tinggiO;
+                                    $open = $dk_tinggiO;
                                 }
                             }
                             //pengecekan terhadap open sedang
@@ -4415,10 +4436,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "rendah"){
-                                    $value->open = $dk_rendahO;
+                                    $open = $dk_rendahO;
                                 }
                                 else if($value->open == "tinggi"){
-                                    $value->open = $dk_tinggiO;
+                                    $open = $dk_tinggiO;
                                 }
                             }
                             //pengecekan terhadap open tinggi
@@ -4439,10 +4460,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "sedang"){
-                                    $value->open = $dk_sedangO;
+                                    $open = $dk_sedangO;
                                 }
                                 else if($value->open == "rendah"){
-                                    $value->open = $dk_rendahO;
+                                    $open = $dk_rendahO;
                                 }
                             }
                         }
@@ -4466,10 +4487,10 @@ class FuzzyController extends Controller
                             }
                         }
                         else if($value->cons == "rendah"){
-                            $value->cons = $dk_rendahC;
+                            $cons = $dk_rendahC;
                         }
                         else if($value->cons == "tinggi"){
-                            $value->cons = $dk_tinggiC;
+                            $cons = $dk_tinggiC;
                         }
                         //pengecekan terhadap neuro rendah
                         if($dk_rendahN == 0){
@@ -4489,10 +4510,10 @@ class FuzzyController extends Controller
                                 }
                             }
                             else if($value->neuro == "tinggi"){
-                                $value->neuro = $dk_tinggiN;
+                                $neuro = $dk_tinggiN;
                             }
                             else if($value->neuro == "sedang"){
-                                $value->neuro = $dk_sedangN;
+                                $neuro = $dk_sedangN;
                             }
                             //pengecekan terhadap open rendah
                             if($dk_rendahO == 0){
@@ -4512,10 +4533,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "sedang"){
-                                    $value->open = $dk_sedangO;
+                                    $open = $dk_sedangO;
                                 }
                                 else if($value->open == "tinggi"){
-                                    $value->open = $dk_tinggiO;
+                                    $open = $dk_tinggiO;
                                 }
                             }
                             //pengecekan terhadap open sedang
@@ -4536,10 +4557,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "rendah"){
-                                    $value->open = $dk_rendahO;
+                                    $open = $dk_rendahO;
                                 }
                                 else if($value->open == "tinggi"){
-                                    $value->open = $dk_tinggiO;
+                                    $open = $dk_tinggiO;
                                 }
                             }
                             //pengecekan terhadap open tinggi
@@ -4560,10 +4581,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "sedang"){
-                                    $value->open = $dk_sedangO;
+                                    $open = $dk_sedangO;
                                 }
                                 else if($value->open == "rendah"){
-                                    $value->open = $dk_rendahO;
+                                    $open = $dk_rendahO;
                                 }
                             }
                         }
@@ -4585,10 +4606,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->neuro == "tinggi"){
-                                    $value->neuro = $dk_tinggiN;
+                                    $neuro = $dk_tinggiN;
                                 }
                                 else if($value->neuro == "rendah"){
-                                    $value->neuro = $dk_rendahN;
+                                    $neuro = $dk_rendahN;
                                 }
                                 //pengecekan terhadap open rendah
                                 if($dk_rendahO == 0){
@@ -4608,10 +4629,10 @@ class FuzzyController extends Controller
                                         }
                                     }
                                     else if($value->open == "sedang"){
-                                        $value->open = $dk_sedangO;
+                                        $open = $dk_sedangO;
                                     }
                                     else if($value->open == "tinggi"){
-                                        $value->open = $dk_tinggiO;
+                                        $open = $dk_tinggiO;
                                     }
                                 }
                                 //pengecekan terhadap open sedang
@@ -4632,10 +4653,10 @@ class FuzzyController extends Controller
                                         }
                                     }
                                     else if($value->open == "rendah"){
-                                        $value->open = $dk_rendahO;
+                                        $open = $dk_rendahO;
                                     }
                                     else if($value->open == "tinggi"){
-                                        $value->open = $dk_tinggiO;
+                                        $open = $dk_tinggiO;
                                     }
                                 }
                                 //pengecekan terhadap open tinggi
@@ -4656,10 +4677,10 @@ class FuzzyController extends Controller
                                         }
                                     }
                                     else if($value->open == "sedang"){
-                                        $value->open = $dk_sedangO;
+                                        $open = $dk_sedangO;
                                     }
                                     else if($value->open == "rendah"){
-                                        $value->open = $dk_rendahO;
+                                        $open = $dk_rendahO;
                                     }
                                 }
                             }
@@ -4681,10 +4702,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->neuro == "rendah"){
-                                    $value->cons = $dk_rendahN;
+                                    $neuro = $dk_rendahN;
                                 }
                                 else if($value->neuro == "sedang"){
-                                    $value->cons = $dk_sedangN;
+                                    $neuro = $dk_sedangN;
                                 }
                                 //pengecekan terhadap open rendah
                                 if($dk_rendahO == 0){
@@ -4704,10 +4725,10 @@ class FuzzyController extends Controller
                                         }
                                     }
                                     else if($value->open == "sedang"){
-                                        $value->open = $dk_sedangO;
+                                        $open = $dk_sedangO;
                                     }
                                     else if($value->open == "tinggi"){
-                                        $value->open = $dk_tinggiO;
+                                        $open = $dk_tinggiO;
                                     }
                                 }
                                 //pengecekan terhadap open sedang
@@ -4728,10 +4749,10 @@ class FuzzyController extends Controller
                                         }
                                     }
                                     else if($value->open == "rendah"){
-                                        $value->open = $dk_rendahO;
+                                        $open = $dk_rendahO;
                                     }
                                     else if($value->open == "tinggi"){
-                                        $value->open = $dk_tinggiO;
+                                        $open = $dk_tinggiO;
                                     }
                                 }
                                 //pengecekan terhadap open tinggi
@@ -4752,10 +4773,10 @@ class FuzzyController extends Controller
                                         }
                                     }
                                     else if($value->open == "sedang"){
-                                        $value->open = $dk_sedangO;
+                                        $open = $dk_sedangO;
                                     }
                                     else if($value->open == "rendah"){
-                                        $value->open = $dk_rendahO;
+                                        $open = $dk_rendahO;
                                     }
                                 }
                             }
@@ -4778,10 +4799,10 @@ class FuzzyController extends Controller
                                 }
                             }
                             else if($value->cons == "rendah"){
-                                $value->cons = $dk_rendahC;
+                                $cons = $dk_rendahC;
                             }
                             else if($value->cons == "sedang"){
-                                $value->cons = $dk_sedangC;
+                                $cons = $dk_sedangC;
                             }
                             //pengecekan terhadap neuro rendah
                             if($dk_rendahN == 0){
@@ -4801,10 +4822,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->neuro == "tinggi"){
-                                    $value->neuro = $dk_tinggiN;
+                                    $neuro = $dk_tinggiN;
                                 }
                                 else if($value->neuro == "sedang"){
-                                    $value->neuro = $dk_sedangN;
+                                    $neuro = $dk_sedangN;
                                 }
                                 //pengecekan terhadap open rendah
                                 if($dk_rendahO == 0){
@@ -4824,10 +4845,10 @@ class FuzzyController extends Controller
                                         }
                                     }
                                     else if($value->open == "tinggi"){
-                                        $value->open = $dk_tinggiO;
+                                        $open = $dk_tinggiO;
                                     }
                                     else if($value->open == "sedang"){
-                                        $value->open = $dk_sedangO;
+                                        $open = $dk_sedangO;
                                     }
                                 }
                                 //pengecekan terhadap open sedang
@@ -4848,10 +4869,10 @@ class FuzzyController extends Controller
                                         }
                                     }
                                     else if($value->open == "tinggi"){
-                                        $value->open = $dk_tinggiO;
+                                        $open = $dk_tinggiO;
                                     }
                                     else if($value->open == "rendah"){
-                                        $value->open = $dk_rendahO;
+                                        $open = $dk_rendahO;
                                     }
                                 }
                                 //pengecekan terhadap open tinggi
@@ -4872,10 +4893,10 @@ class FuzzyController extends Controller
                                         }
                                     }
                                     else if($value->open == "sedang"){
-                                        $value->open = $dk_sedangO;
+                                        $open = $dk_sedangO;
                                     }
                                     else if($value->open == "rendah"){
-                                        $value->open = $dk_rendahO;
+                                        $open = $dk_rendahO;
                                     }
                                 }
                             }
@@ -4897,10 +4918,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->neuro == "tinggi"){
-                                    $value->neuro = $dk_tinggiN;
+                                    $neuro = $dk_tinggiN;
                                 }
                                 else if($value->neuro == "rendah"){
-                                    $value->neuro = $dk_rendahN;
+                                    $neuro = $dk_rendahN;
                                 }
                                 //pengecekan terhadap open rendah
                                 if($dk_rendahO == 0){
@@ -4920,10 +4941,10 @@ class FuzzyController extends Controller
                                         }
                                     }
                                     else if($value->open == "sedang"){
-                                        $value->open = $dk_sedangO;
+                                        $open = $dk_sedangO;
                                     }
                                     else if($value->open == "tinggi"){
-                                        $value->open = $dk_tinggiO;
+                                        $open = $dk_tinggiO;
                                     }
                                 }
                                 //pengecekan terhadap open sedang
@@ -4944,10 +4965,10 @@ class FuzzyController extends Controller
                                         }
                                     }
                                     else if($value->open == "rendah"){
-                                        $value->open = $dk_rendahO;
+                                        $open = $dk_rendahO;
                                     }
                                     else if($value->open == "tinggi"){
-                                        $value->open = $dk_tinggiO;
+                                        $open = $dk_tinggiO;
                                     }
                                 }
                                 //pengecekan terhadap open tinggi
@@ -4968,10 +4989,10 @@ class FuzzyController extends Controller
                                         }
                                     }
                                     else if($value->open == "sedang"){
-                                        $value->open = $dk_sedangO;
+                                        $open = $dk_sedangO;
                                     }
                                     else if($value->open == "rendah"){
-                                        $value->open = $dk_rendahO;
+                                        $open = $dk_rendahO;
                                     }
                                 }
                             }
@@ -4993,10 +5014,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->neuro == "rendah"){
-                                    $value->cons = $dk_rendahN;
+                                    $neuro = $dk_rendahN;
                                 }
                                 else if($value->neuro == "sedang"){
-                                    $value->cons = $dk_sedangN;
+                                    $neuro = $dk_sedangN;
                                 }
                                 //pengecekan terhadap open rendah
                                 if($dk_rendahO == 0){
@@ -5016,10 +5037,10 @@ class FuzzyController extends Controller
                                         }
                                     }
                                     else if($value->open == "sedang"){
-                                        $value->open = $dk_sedangO;
+                                        $open = $dk_sedangO;
                                     }
                                     else if($value->open == "tinggi"){
-                                        $value->open = $dk_tinggiO;
+                                        $open = $dk_tinggiO;
                                     }
                                 }
                                 //pengecekan terhadap open sedang
@@ -5040,10 +5061,10 @@ class FuzzyController extends Controller
                                         }
                                     }
                                     else if($value->open == "rendah"){
-                                        $value->open = $dk_rendahO;
+                                        $open = $dk_rendahO;
                                     }
                                     else if($value->open == "tinggi"){
-                                        $value->open = $dk_tinggiO;
+                                        $open = $dk_tinggiO;
                                     }
                                 }
                                 //pengecekan terhadap open tinggi
@@ -5064,10 +5085,10 @@ class FuzzyController extends Controller
                                         }
                                     }
                                     else if($value->open == "sedang"){
-                                        $value->open = $dk_sedangO;
+                                        $open = $dk_sedangO;
                                     }
                                     else if($value->open == "rendah"){
-                                        $value->open = $dk_rendahO;
+                                        $open = $dk_rendahO;
                                     }
                                 }
                             }
@@ -5092,10 +5113,10 @@ class FuzzyController extends Controller
                         }
                     }
                     else if($value->agree == "rendah"){
-                        $value->agree = $dk_rendahA;
+                        $agree = $dk_rendahA;
                     }
                     else if($value->agree == "sedang"){
-                        $value->agree = $dk_sedangA;
+                        $agree = $dk_sedangA;
                     }
                     //pengecekan terhadap cons rendah
                     if($dk_rendahC == 0){
@@ -5115,10 +5136,10 @@ class FuzzyController extends Controller
                             }
                         }
                         else if($value->cons == "sedang"){
-                            $value->cons = $dk_sedangC;
+                            $cons = $dk_sedangC;
                         }
                         else if($value->cons == "tinggi"){
-                            $value->cons = $dk_tinggiC;
+                            $cons = $dk_tinggiC;
                         }
                         //pengecekan terhadap neuro rendah
                         if($dk_rendahN == 0){
@@ -5138,10 +5159,10 @@ class FuzzyController extends Controller
                                 }
                             }
                             else if($value->neuro == "tinggi"){
-                                $value->neuro = $dk_tinggiN;
+                                $neuro = $dk_tinggiN;
                             }
                             else if($value->neuro == "sedang"){
-                                $value->neuro = $dk_sedangN;
+                                $neuro = $dk_sedangN;
                             }
                             //pengecekan terhadap open rendah
                             if($dk_rendahO == 0){
@@ -5161,10 +5182,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "sedang"){
-                                    $value->open = $dk_sedangO;
+                                    $open = $dk_sedangO;
                                 }
                                 else if($value->open == "tinggi"){
-                                    $value->open = $dk_tinggiO;
+                                    $open = $dk_tinggiO;
                                 }
                             }
                             //pengecekan terhadap open sedang
@@ -5185,10 +5206,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "rendah"){
-                                    $value->open = $dk_rendahO;
+                                    $open = $dk_rendahO;
                                 }
                                 else if($value->open == "tinggi"){
-                                    $value->open = $dk_tinggiO;
+                                    $open = $dk_tinggiO;
                                 }
                             }
                             //pengecekan terhadap open tinggi
@@ -5209,10 +5230,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "sedang"){
-                                    $value->open = $dk_sedangO;
+                                    $open = $dk_sedangO;
                                 }
                                 else if($value->open == "rendah"){
-                                    $value->open = $dk_rendahO;
+                                    $open = $dk_rendahO;
                                 }
                             }
                         }
@@ -5234,10 +5255,10 @@ class FuzzyController extends Controller
                                 }
                             }
                             else if($value->neuro == "tinggi"){
-                                $value->neuro = $dk_tinggiN;
+                                $neuro = $dk_tinggiN;
                             }
                             else if($value->neuro == "rendah"){
-                                $value->neuro = $dk_rendahN;
+                                $neuro = $dk_rendahN;
                             }
                             //pengecekan terhadap open rendah
                             if($dk_rendahO == 0){
@@ -5257,10 +5278,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "sedang"){
-                                    $value->open = $dk_sedangO;
+                                    $open = $dk_sedangO;
                                 }
                                 else if($value->open == "tinggi"){
-                                    $value->open = $dk_tinggiO;
+                                    $open = $dk_tinggiO;
                                 }
                             }
                             //pengecekan terhadap open sedang
@@ -5281,10 +5302,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "rendah"){
-                                    $value->open = $dk_rendahO;
+                                    $open = $dk_rendahO;
                                 }
                                 else if($value->open == "tinggi"){
-                                    $value->open = $dk_tinggiO;
+                                    $open = $dk_tinggiO;
                                 }
                             }
                             //pengecekan terhadap open tinggi
@@ -5305,10 +5326,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "sedang"){
-                                    $value->open = $dk_sedangO;
+                                    $open = $dk_sedangO;
                                 }
                                 else if($value->open == "rendah"){
-                                    $value->open = $dk_rendahO;
+                                    $open = $dk_rendahO;
                                 }
                             }
                         }
@@ -5330,10 +5351,10 @@ class FuzzyController extends Controller
                                 }
                             }
                             else if($value->neuro == "rendah"){
-                                $value->cons = $dk_rendahN;
+                                $neuro = $dk_rendahN;
                             }
                             else if($value->neuro == "sedang"){
-                                $value->cons = $dk_sedangN;
+                                $neuro = $dk_sedangN;
                             }
                             //pengecekan terhadap open rendah
                             if($dk_rendahO == 0){
@@ -5353,10 +5374,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "sedang"){
-                                    $value->open = $dk_sedangO;
+                                    $open = $dk_sedangO;
                                 }
                                 else if($value->open == "tinggi"){
-                                    $value->open = $dk_tinggiO;
+                                    $open = $dk_tinggiO;
                                 }
                             }
                             //pengecekan terhadap open sedang
@@ -5377,10 +5398,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "rendah"){
-                                    $value->open = $dk_rendahO;
+                                    $open = $dk_rendahO;
                                 }
                                 else if($value->open == "tinggi"){
-                                    $value->open = $dk_tinggiO;
+                                    $open = $dk_tinggiO;
                                 }
                             }
                             //pengecekan terhadap open tinggi
@@ -5401,10 +5422,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "sedang"){
-                                    $value->open = $dk_sedangO;
+                                    $open = $dk_sedangO;
                                 }
                                 else if($value->open == "rendah"){
-                                    $value->open = $dk_rendahO;
+                                    $open = $dk_rendahO;
                                 }
                             }
                         }
@@ -5428,10 +5449,10 @@ class FuzzyController extends Controller
                             }
                         }
                         else if($value->cons == "rendah"){
-                            $value->cons = $dk_rendahC;
+                            $cons = $dk_rendahC;
                         }
                         else if($value->cons == "tinggi"){
-                            $value->cons = $dk_tinggiC;
+                            $cons = $dk_tinggiC;
                         }
                         //pengecekan terhadap neuro rendah
                         if($dk_rendahN == 0){
@@ -5451,10 +5472,10 @@ class FuzzyController extends Controller
                                 }
                             }
                             else if($value->neuro == "tinggi"){
-                                $value->neuro = $dk_tinggiN;
+                                $neuro = $dk_tinggiN;
                             }
                             else if($value->neuro == "sedang"){
-                                $value->neuro = $dk_sedangN;
+                                $neuro = $dk_sedangN;
                             }
                             //pengecekan terhadap open rendah
                             if($dk_rendahO == 0){
@@ -5474,10 +5495,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "sedang"){
-                                    $value->open = $dk_sedangO;
+                                    $open = $dk_sedangO;
                                 }
                                 else if($value->open == "tinggi"){
-                                    $value->open = $dk_tinggiO;
+                                    $open = $dk_tinggiO;
                                 }
                             }
                             //pengecekan terhadap open sedang
@@ -5498,10 +5519,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "rendah"){
-                                    $value->open = $dk_rendahO;
+                                    $open = $dk_rendahO;
                                 }
                                 else if($value->open == "tinggi"){
-                                    $value->open = $dk_tinggiO;
+                                    $open = $dk_tinggiO;
                                 }
                             }
                             //pengecekan terhadap open tinggi
@@ -5522,10 +5543,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "sedang"){
-                                    $value->open = $dk_sedangO;
+                                    $open = $dk_sedangO;
                                 }
                                 else if($value->open == "rendah"){
-                                    $value->open = $dk_rendahO;
+                                    $open = $dk_rendahO;
                                 }
                             }
                         }
@@ -5547,10 +5568,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->neuro == "tinggi"){
-                                    $value->neuro = $dk_tinggiN;
+                                    $neuro = $dk_tinggiN;
                                 }
                                 else if($value->neuro == "rendah"){
-                                    $value->neuro = $dk_rendahN;
+                                    $neuro = $dk_rendahN;
                                 }
                                 //pengecekan terhadap open rendah
                                 if($dk_rendahO == 0){
@@ -5570,10 +5591,10 @@ class FuzzyController extends Controller
                                         }
                                     }
                                     else if($value->open == "sedang"){
-                                        $value->open = $dk_sedangO;
+                                        $open = $dk_sedangO;
                                     }
                                     else if($value->open == "tinggi"){
-                                        $value->open = $dk_tinggiO;
+                                        $open = $dk_tinggiO;
                                     }
                                 }
                                 //pengecekan terhadap open sedang
@@ -5594,10 +5615,10 @@ class FuzzyController extends Controller
                                         }
                                     }
                                     else if($value->open == "rendah"){
-                                        $value->open = $dk_rendahO;
+                                        $open = $dk_rendahO;
                                     }
                                     else if($value->open == "tinggi"){
-                                        $value->open = $dk_tinggiO;
+                                        $open = $dk_tinggiO;
                                     }
                                 }
                                 //pengecekan terhadap open tinggi
@@ -5618,10 +5639,10 @@ class FuzzyController extends Controller
                                         }
                                     }
                                     else if($value->open == "sedang"){
-                                        $value->open = $dk_sedangO;
+                                        $open = $dk_sedangO;
                                     }
                                     else if($value->open == "rendah"){
-                                        $value->open = $dk_rendahO;
+                                        $open = $dk_rendahO;
                                     }
                                 }
                             }
@@ -5643,10 +5664,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->neuro == "rendah"){
-                                    $value->cons = $dk_rendahN;
+                                    $neuro = $dk_rendahN;
                                 }
                                 else if($value->neuro == "sedang"){
-                                    $value->cons = $dk_sedangN;
+                                    $neuro = $dk_sedangN;
                                 }
                                 //pengecekan terhadap open rendah
                                 if($dk_rendahO == 0){
@@ -5666,10 +5687,10 @@ class FuzzyController extends Controller
                                         }
                                     }
                                     else if($value->open == "sedang"){
-                                        $value->open = $dk_sedangO;
+                                        $open = $dk_sedangO;
                                     }
                                     else if($value->open == "tinggi"){
-                                        $value->open = $dk_tinggiO;
+                                        $open = $dk_tinggiO;
                                     }
                                 }
                                 //pengecekan terhadap open sedang
@@ -5690,10 +5711,10 @@ class FuzzyController extends Controller
                                         }
                                     }
                                     else if($value->open == "rendah"){
-                                        $value->open = $dk_rendahO;
+                                        $open = $dk_rendahO;
                                     }
                                     else if($value->open == "tinggi"){
-                                        $value->open = $dk_tinggiO;
+                                        $open = $dk_tinggiO;
                                     }
                                 }
                                 //pengecekan terhadap open tinggi
@@ -5714,10 +5735,10 @@ class FuzzyController extends Controller
                                         }
                                     }
                                     else if($value->open == "sedang"){
-                                        $value->open = $dk_sedangO;
+                                        $open = $dk_sedangO;
                                     }
                                     else if($value->open == "rendah"){
-                                        $value->open = $dk_rendahO;
+                                        $open = $dk_rendahO;
                                     }
                                 }
                             }
@@ -5740,10 +5761,10 @@ class FuzzyController extends Controller
                                 }
                             }
                             else if($value->cons == "rendah"){
-                                $value->cons = $dk_rendahC;
+                                $cons = $dk_rendahC;
                             }
                             else if($value->cons == "sedang"){
-                                $value->cons = $dk_sedangC;
+                                $cons = $dk_sedangC;
                             }
                             //pengecekan terhadap neuro rendah
                             if($dk_rendahN == 0){
@@ -5763,10 +5784,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->neuro == "tinggi"){
-                                    $value->neuro = $dk_tinggiN;
+                                    $neuro = $dk_tinggiN;
                                 }
                                 else if($value->neuro == "sedang"){
-                                    $value->neuro = $dk_sedangN;
+                                    $neuro = $dk_sedangN;
                                 }
                                 //pengecekan terhadap open rendah
                                 if($dk_rendahO == 0){
@@ -5786,10 +5807,10 @@ class FuzzyController extends Controller
                                         }
                                     }
                                     else if($value->open == "tinggi"){
-                                        $value->open = $dk_tinggiO;
+                                        $open = $dk_tinggiO;
                                     }
                                     else if($value->open == "sedang"){
-                                        $value->open = $dk_sedangO;
+                                        $open = $dk_sedangO;
                                     }
                                 }
                                 //pengecekan terhadap open sedang
@@ -5810,10 +5831,10 @@ class FuzzyController extends Controller
                                         }
                                     }
                                     else if($value->open == "tinggi"){
-                                        $value->open = $dk_tinggiO;
+                                        $open = $dk_tinggiO;
                                     }
                                     else if($value->open == "rendah"){
-                                        $value->open = $dk_rendahO;
+                                        $open = $dk_rendahO;
                                     }
                                 }
                                 //pengecekan terhadap open tinggi
@@ -5834,10 +5855,10 @@ class FuzzyController extends Controller
                                         }
                                     }
                                     else if($value->open == "sedang"){
-                                        $value->open = $dk_sedangO;
+                                        $open = $dk_sedangO;
                                     }
                                     else if($value->open == "rendah"){
-                                        $value->open = $dk_rendahO;
+                                        $open = $dk_rendahO;
                                     }
                                 }
                             }
@@ -5859,10 +5880,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->neuro == "tinggi"){
-                                    $value->neuro = $dk_tinggiN;
+                                    $neuro = $dk_tinggiN;
                                 }
                                 else if($value->neuro == "rendah"){
-                                    $value->neuro = $dk_rendahN;
+                                    $neuro = $dk_rendahN;
                                 }
                                 //pengecekan terhadap open rendah
                                 if($dk_rendahO == 0){
@@ -5882,10 +5903,10 @@ class FuzzyController extends Controller
                                         }
                                     }
                                     else if($value->open == "sedang"){
-                                        $value->open = $dk_sedangO;
+                                        $open = $dk_sedangO;
                                     }
                                     else if($value->open == "tinggi"){
-                                        $value->open = $dk_tinggiO;
+                                        $open = $dk_tinggiO;
                                     }
                                 }
                                 //pengecekan terhadap open sedang
@@ -5906,10 +5927,10 @@ class FuzzyController extends Controller
                                         }
                                     }
                                     else if($value->open == "rendah"){
-                                        $value->open = $dk_rendahO;
+                                        $open = $dk_rendahO;
                                     }
                                     else if($value->open == "tinggi"){
-                                        $value->open = $dk_tinggiO;
+                                        $open = $dk_tinggiO;
                                     }
                                 }
                                 //pengecekan terhadap open tinggi
@@ -5930,10 +5951,10 @@ class FuzzyController extends Controller
                                         }
                                     }
                                     else if($value->open == "sedang"){
-                                        $value->open = $dk_sedangO;
+                                        $open = $dk_sedangO;
                                     }
                                     else if($value->open == "rendah"){
-                                        $value->open = $dk_rendahO;
+                                        $open = $dk_rendahO;
                                     }
                                 }
                             }
@@ -5955,10 +5976,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->neuro == "rendah"){
-                                    $value->cons = $dk_rendahN;
+                                    $neuro = $dk_rendahN;
                                 }
                                 else if($value->neuro == "sedang"){
-                                    $value->cons = $dk_sedangN;
+                                    $neuro = $dk_sedangN;
                                 }
                                 //pengecekan terhadap open rendah
                                 if($dk_rendahO == 0){
@@ -5978,10 +5999,10 @@ class FuzzyController extends Controller
                                         }
                                     }
                                     else if($value->open == "sedang"){
-                                        $value->open = $dk_sedangO;
+                                        $open = $dk_sedangO;
                                     }
                                     else if($value->open == "tinggi"){
-                                        $value->open = $dk_tinggiO;
+                                        $open = $dk_tinggiO;
                                     }
                                 }
                                 //pengecekan terhadap open sedang
@@ -6002,10 +6023,10 @@ class FuzzyController extends Controller
                                         }
                                     }
                                     else if($value->open == "rendah"){
-                                        $value->open = $dk_rendahO;
+                                        $open = $dk_rendahO;
                                     }
                                     else if($value->open == "tinggi"){
-                                        $value->open = $dk_tinggiO;
+                                        $open = $dk_tinggiO;
                                     }
                                 }
                                 //pengecekan terhadap open tinggi
@@ -6026,10 +6047,10 @@ class FuzzyController extends Controller
                                         }
                                     }
                                     else if($value->open == "sedang"){
-                                        $value->open = $dk_sedangO;
+                                        $open = $dk_sedangO;
                                     }
                                     else if($value->open == "rendah"){
-                                        $value->open = $dk_rendahO;
+                                        $open = $dk_rendahO;
                                     }
                                 }
                             }
@@ -6056,10 +6077,10 @@ class FuzzyController extends Controller
                     }
                 }
                 else if($value->extra == "sedang"){
-                    $value->extra = $dk_sedangE;
+                    $extra = $dk_sedangE;
                 }
                 else if($value->extra == "rendah"){
-                    $value->extra = $dk_rendahE;
+                    $extra = $dk_rendahE;
                 }
 
                 //pengecekan terhadap agree rendah
@@ -6080,10 +6101,10 @@ class FuzzyController extends Controller
                         }
                     }
                     else if($value->agree == "sedang"){
-                        $value->agree = $dk_sedangA;
+                        $agree = $dk_sedangA;
                     }
                     else if($value->agree == "tinggi"){
-                        $value->agree = $dk_tinggiA;
+                        $agree = $dk_tinggiA;
                     }
 
                     //pengecekan terhadap cons rendah
@@ -6104,10 +6125,10 @@ class FuzzyController extends Controller
                             }
                         }
                         else if($value->cons == "sedang"){
-                            $value->cons = $dk_sedangC;
+                            $cons = $dk_sedangC;
                         }
                         else if($value->cons == "tinggi"){
-                            $value->cons = $dk_tinggiC;
+                            $cons = $dk_tinggiC;
                         }
                         //pengecekan terhadap neuro rendah
                         if($dk_rendahN == 0){
@@ -6127,10 +6148,10 @@ class FuzzyController extends Controller
                                 }
                             }
                             else if($value->neuro == "sedang"){
-                                $value->neuro = $dk_sedangN;
+                                $neuro = $dk_sedangN;
                             }
                             else if($value->neuro == "tinggi"){
-                                $value->neuro = $dk_tinggiN;
+                                $neuro = $dk_tinggiN;
                             }
                             //pengecekan terhadap open rendah
                             if($dk_rendahO == 0){
@@ -6150,10 +6171,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "sedang"){
-                                    $value->open = $dk_sedangO;
+                                    $open = $dk_sedangO;
                                 }
                                 else if($value->open == "tinggi"){
-                                    $value->open = $dk_tinggiO;
+                                    $open = $dk_tinggiO;
                                 }
                             }
                             //pengecekan terhadap open sedang
@@ -6174,10 +6195,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "rendah"){
-                                    $value->open = $dk_rendahO;
+                                    $open = $dk_rendahO;
                                 }
                                 else if($value->open == "tinggi"){
-                                    $value->open = $dk_tinggiO;
+                                    $open = $dk_tinggiO;
                                 }
                             }
                             //pengecekan terhadap open tinggi
@@ -6198,10 +6219,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "rendah"){
-                                    $value->neuro = $dk_rendahO;
+                                    $open = $dk_rendahO;
                                 }
                                 else if($value->open == "sedang"){
-                                    $value->neuro = $dk_sedangO;
+                                    $open = $dk_sedangO;
                                 }
                             }
                         }
@@ -6223,10 +6244,10 @@ class FuzzyController extends Controller
                                 }
                             }
                             else if($value->neuro == "tinggi"){
-                                $value->neuro = $dk_tinggiN;
+                                $neuro = $dk_tinggiN;
                             }
                             else if($value->neuro == "rendah"){
-                                $value->neuro = $dk_rendahN;
+                                $neuro = $dk_rendahN;
                             }
                             //pengecekan terhadap open rendah
                             if($dk_rendahO == 0){
@@ -6246,10 +6267,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "sedang"){
-                                    $value->open = $dk_sedangO;
+                                    $open = $dk_sedangO;
                                 }
                                 else if($value->open == "tinggi"){
-                                    $value->open = $dk_tinggiO;
+                                    $open = $dk_tinggiO;
                                 }
                             }
                             //pengecekan terhadap open sedang
@@ -6270,10 +6291,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "rendah"){
-                                    $value->open = $dk_rendahO;
+                                    $open = $dk_rendahO;
                                 }
                                 else if($value->open == "tinggi"){
-                                    $value->open = $dk_tinggiO;
+                                    $open = $dk_tinggiO;
                                 }
                             }
                             //pengecekan terhadap open tinggi
@@ -6294,10 +6315,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "rendah"){
-                                    $value->neuro = $dk_rendahO;
+                                    $open = $dk_rendahO;
                                 }
                                 else if($value->open == "sedang"){
-                                    $value->neuro = $dk_sedangO;
+                                    $open = $dk_rendahO;
                                 }
                             }
                         }
@@ -6319,10 +6340,10 @@ class FuzzyController extends Controller
                                 }
                             }
                             else if($value->neuro == "sedang"){
-                                $value->neuro = $dk_sedangN;
+                                $neuro = $dk_sedangN;
                             }
                             else if($value->neuro == "rendah"){
-                                $value->neuro = $dk_rendahN;
+                                $neuro = $dk_rendahN;
                             }
                             //pengecekan terhadap open rendah
                             if($dk_rendahO == 0 ){
@@ -6342,10 +6363,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "sedang"){
-                                    $value->open = $dk_sedangO;
+                                    $open = $dk_sedangO;
                                 }
                                 else if($value->open == "tinggi"){
-                                    $value->open = $dk_tinggiO;
+                                    $open = $dk_tinggiO;
                                 }
                             }
                             //pengecekan terhadap open sedang
@@ -6366,10 +6387,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "rendah"){
-                                    $value->open = $dk_rendahO;
+                                    $open = $dk_rendahO;
                                 }
                                 else if($value->open == "tinggi"){
-                                    $value->open = $dk_tinggiO;
+                                    $open = $dk_tinggiO;
                                 }
                             }
                             //pengecekan terhadap open tinggi
@@ -6389,10 +6410,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "rendah"){
-                                    $value->neuro = $dk_rendahO;
+                                    $open = $dk_rendahO;
                                 }
                                 else if($value->open == "sedang"){
-                                    $value->neuro = $dk_sedangO;
+                                    $open = $dk_sedangO;
                                 }
                             }
                         }
@@ -6416,10 +6437,10 @@ class FuzzyController extends Controller
                             }
                         }
                         else if($value->cons == "rendah"){
-                            $value->cons = $dk_rendahC;
+                            $cons = $dk_rendahC;
                         }
                         else if($value->cons == "tinggi"){
-                            $value->cons = $dk_tinggiC;
+                            $cons = $dk_tinggiC;
                         }
                         //pengecekan terhadap neuro rendah
                         if($dk_rendahN == 0){
@@ -6439,10 +6460,10 @@ class FuzzyController extends Controller
                                 }
                             }
                             else if($value->neuro == "sedang"){
-                                $value->neuro = $dk_sedangN;
+                                $neuro = $dk_sedangN;
                             }
                             else if($value->neuro == "tinggi"){
-                                $value->neuro = $dk_tinggiN;
+                                $neuro = $dk_tinggiN;
                             }
                             //pengecekan terhadap open rendah
                             if($dk_rendahO == 0){
@@ -6462,10 +6483,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "sedang"){
-                                    $value->open = $dk_sedangO;
+                                    $open = $dk_sedangO;
                                 }
                                 else if($value->open == "tinggi"){
-                                    $value->open = $dk_tinggiO;
+                                    $open = $dk_tinggiO;
                                 }
                             }
                             //pengecekan terhadap open sedang
@@ -6486,10 +6507,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "rendah"){
-                                    $value->open = $dk_rendahO;
+                                    $open = $dk_rendahO;
                                 }
                                 else if($value->open == "tinggi"){
-                                    $value->open = $dk_tinggiO;
+                                    $open = $dk_tinggiO;
                                 }
                             }
                             //pengecekan terhadap open tinggi
@@ -6510,10 +6531,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "rendah"){
-                                    $value->neuro = $dk_rendahO;
+                                    $open = $dk_rendahO;
                                 }
                                 else if($value->open == "sedang"){
-                                    $value->neuro = $dk_sedangO;
+                                    $open = $dk_sedangO;
                                 }
                             }
                         }
@@ -6535,10 +6556,10 @@ class FuzzyController extends Controller
                                 }
                             }
                             else if($value->neuro == "rendah"){
-                                $value->neuro = $dk_rendahN;
+                                $neuro = $dk_rendahN;
                             }
                             else if($value->neuro == "tinggi"){
-                                $value->neuro = $dk_tinggiN;
+                                $neuro = $dk_tinggiN;
                             }
                             //pengecekan terhadap open rendah
                             if($dk_rendahO == 0){
@@ -6558,10 +6579,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "sedang"){
-                                    $value->open = $dk_sedangO;
+                                    $open = $dk_sedangO;
                                 }
                                 else if($value->open == "tinggi"){
-                                    $value->open = $dk_tinggiO;
+                                    $open = $dk_tinggiO;
                                 }
                             }
                             //pengecekan terhadap open sedang
@@ -6582,10 +6603,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "rendah"){
-                                    $value->open = $dk_rendahO;
+                                    $open = $dk_rendahO;
                                 }
                                 else if($value->open == "tinggi"){
-                                    $value->open = $dk_tinggiO;
+                                    $open = $dk_tinggiO;
                                 }
                             }
                             //pengecekan terhadap open tinggi
@@ -6606,10 +6627,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "rendah"){
-                                    $value->neuro = $dk_rendahO;
+                                    $open = $dk_rendahO;
                                 }
                                 else if($value->open == "sedang"){
-                                    $value->neuro = $dk_sedangO;
+                                    $open = $dk_sedangO;
                                 }
                             }
                         }
@@ -6631,10 +6652,10 @@ class FuzzyController extends Controller
                                 }
                             }
                             else if($value->neuro == "rendah"){
-                                $value->cons = $dk_rendahN;
+                                $neuro = $dk_rendahN;
                             }
                             else if($value->neuro == "sedang"){
-                                $value->cons = $dk_sedangN;
+                                $neuro = $dk_sedangN;
                             }
                             //pengecekan terhadap open rendah
                             if($dk_rendahO == 0){
@@ -6654,10 +6675,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "sedang"){
-                                    $value->open = $dk_sedangO;
+                                    $open = $dk_sedangO;
                                 }
                                 else if($value->open == "tinggi"){
-                                    $value->open = $dk_tinggiO;
+                                    $open = $dk_tinggiO;
                                 }
                             }
                             //pengecekan terhadap open sedang
@@ -6678,10 +6699,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "rendah"){
-                                    $value->open = $dk_rendahO;
+                                    $open = $dk_rendahO;
                                 }
                                 else if($value->open == "tinggi"){
-                                    $value->open = $dk_tinggiO;
+                                    $open = $dk_tinggiO;
                                 }
                             }
                             //pengecekan terhadap open tinggi
@@ -6702,10 +6723,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "rendah"){
-                                    $value->open = $dk_rendahO;
+                                    $open = $dk_rendahO;
                                 }
                                 else if($value->open == "sedang"){
-                                    $value->open = $dk_sedangO;
+                                    $open = $dk_sedangO;
                                 }
                             }
                         }
@@ -6728,10 +6749,10 @@ class FuzzyController extends Controller
                             }
                         }
                         else if($value->cons == "rendah"){
-                            $value->cons = $dk_rendahC;
+                            $cons = $dk_rendahC;
                         }
                         else if($value->cons == "sedang"){
-                            $value->cons = $dk_sedangC;
+                            $cons = $dk_sedangC;
                         }
                         //pengecekan terhadap neuro rendah
                         if($dk_rendahN == 0){
@@ -6751,10 +6772,10 @@ class FuzzyController extends Controller
                                 }
                             }
                             else if($value->neuro == "tinggi"){
-                                $value->neuro = $dk_tinggiN;
+                                $neuro = $dk_tinggiN;
                             }
                             else if($value->neuro == "sedang"){
-                                $value->neuro = $dk_sedangN;
+                                $neuro = $dk_sedangN;
                             }
                             //pengecekan terhadap open rendah
                             if($dk_rendahO == 0){
@@ -6774,10 +6795,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "tinggi"){
-                                    $value->open = $dk_tinggiO;
+                                    $open = $dk_tinggiO;
                                 }
                                 else if($value->open == "sedang"){
-                                    $value->open = $dk_sedangO;
+                                    $open = $dk_sedangO;
                                 }
                             }
                             //pengecekan terhadap open sedang
@@ -6798,10 +6819,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "tinggi"){
-                                    $value->open = $dk_tinggiO;
+                                    $open = $dk_tinggiO;
                                 }
                                 else if($value->open == "rendah"){
-                                    $value->open = $dk_rendahO;
+                                    $open = $dk_rendahO;
                                 }
                             }
                             //pengecekan terhadap open tinggi
@@ -6822,10 +6843,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "sedang"){
-                                    $value->open = $dk_sedangO;
+                                    $open = $dk_sedangO;
                                 }
                                 else if($value->open == "rendah"){
-                                    $value->open = $dk_rendahO;
+                                    $open = $dk_rendahO;
                                 }
                             }
                         }
@@ -6847,10 +6868,10 @@ class FuzzyController extends Controller
                                 }
                             }
                             else if($value->neuro == "tinggi"){
-                                $value->neuro = $dk_tinggiN;
+                                $neuro = $dk_tinggiN;
                             }
                             else if($value->neuro == "rendah"){
-                                $value->neuro = $dk_rendahN;
+                                $neuro = $dk_rendahN;
                             }
                             //pengecekan terhadap open rendah
                             if($dk_rendahO == 0){
@@ -6870,10 +6891,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "sedang"){
-                                    $value->open = $dk_sedangO;
+                                    $open = $dk_sedangO;
                                 }
                                 else if($value->open == "tinggi"){
-                                    $value->open = $dk_tinggiO;
+                                    $open = $dk_tinggiO;
                                 }
                             }
                             //pengecekan terhadap open sedang
@@ -6894,10 +6915,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "rendah"){
-                                    $value->open = $dk_rendahO;
+                                    $open = $dk_rendahO;
                                 }
                                 else if($value->open == "tinggi"){
-                                    $value->open = $dk_tinggiO;
+                                    $open = $dk_tinggiO;
                                 }
                             }
                             //pengecekan terhadap open tinggi
@@ -6918,10 +6939,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "sedang"){
-                                    $value->open = $dk_sedangO;
+                                    $open = $dk_sedangO;
                                 }
                                 else if($value->open == "rendah"){
-                                    $value->open = $dk_rendahO;
+                                    $open = $dk_rendahO;
                                 }
                             }
                         }
@@ -6943,10 +6964,10 @@ class FuzzyController extends Controller
                                 }
                             }
                             else if($value->neuro == "rendah"){
-                                $value->cons = $dk_rendahN;
+                                $neuro = $dk_rendahN;;
                             }
                             else if($value->neuro == "sedang"){
-                                $value->cons = $dk_sedangN;
+                                $neuro = $dk_sedangN;
                             }
                             //pengecekan terhadap open rendah
                             if($dk_rendahO == 0){
@@ -6966,10 +6987,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "sedang"){
-                                    $value->open = $dk_sedangO;
+                                    $open = $dk_sedangO;
                                 }
                                 else if($value->open == "tinggi"){
-                                    $value->open = $dk_tinggiO;
+                                    $open = $dk_tinggiO;
                                 }
                             }
                             //pengecekan terhadap open sedang
@@ -6990,10 +7011,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "rendah"){
-                                    $value->open = $dk_rendahO;
+                                    $open = $dk_rendahO;
                                 }
                                 else if($value->open == "tinggi"){
-                                    $value->open = $dk_tinggiO;
+                                    $open = $dk_tinggiO;
                                 }
                             }
                             //pengecekan terhadap open tinggi
@@ -7014,10 +7035,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "sedang"){
-                                    $value->open = $dk_sedangO;
+                                    $open = $dk_sedangO;
                                 }
                                 else if($value->open == "rendah"){
-                                    $value->open = $dk_rendahO;
+                                    $open = $dk_rendahO;
                                 }
                             }
                         }
@@ -7041,10 +7062,10 @@ class FuzzyController extends Controller
                         }
                     }
                     else if($value->agree == "rendah"){
-                        $value->agree = $dk_rendahA;
+                        $agree = $dk_rendahA;
                     }
                     else if($value->agree == "tinggi"){
-                        $value->agree = $dk_tinggiA;
+                        $agree = $dk_tinggiA;
                     }
                     //pengecekan terhadap cons rendah
                     if($dk_rendahC == 0){
@@ -7064,10 +7085,10 @@ class FuzzyController extends Controller
                             }
                         }
                         else if($value->cons == "sedang"){
-                            $value->cons = $dk_sedangC;
+                            $cons = $dk_sedangC;
                         }
                         else if($value->cons == "tinggi"){
-                            $value->cons = $dk_tinggiC;
+                            $cons = $dk_tinggiC;
                         }
                         //pengecekan terhadap neuro rendah
                         if($dk_rendahN == 0){
@@ -7087,10 +7108,12 @@ class FuzzyController extends Controller
                                 }
                             }
                             else if($value->neuro == "tinggi"){
-                                $value->neuro = $dk_tinggiN;
+                                $neuro = $dk_tinggiN;
+                                $neuro = $dk_tinggiN;
                             }
                             else if($value->neuro == "sedang"){
-                                $value->neuro = $dk_sedangN;
+                                $neuro = $dk_sedangN;
+                                $neuro = $dk_sedangN;
                             }
                             //pengecekan terhadap open rendah
                             if($dk_rendahO == 0){
@@ -7110,10 +7133,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "sedang"){
-                                    $value->open = $dk_sedangO;
+                                    $open = $dk_sedangO;
                                 }
                                 else if($value->open == "tinggi"){
-                                    $value->open = $dk_tinggiO;
+                                    $open = $dk_tinggiO;
                                 }
                             }
                             //pengecekan terhadap open sedang
@@ -7134,10 +7157,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "rendah"){
-                                    $value->open = $dk_rendahO;
+                                    $open = $dk_rendahO;
                                 }
                                 else if($value->open == "tinggi"){
-                                    $value->open = $dk_tinggiO;
+                                    $open = $dk_tinggiO;
                                 }
                             }
                             //pengecekan terhadap open tinggi
@@ -7158,10 +7181,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "sedang"){
-                                    $value->open = $dk_sedangO;
+                                    $open = $dk_sedangO;
                                 }
                                 else if($value->open == "rendah"){
-                                    $value->open = $dk_rendahO;
+                                    $open = $dk_rendahO;
                                 }
                             }
                         }
@@ -7183,10 +7206,10 @@ class FuzzyController extends Controller
                                 }
                             }
                             else if($value->neuro == "tinggi"){
-                                $value->neuro = $dk_tinggiN;
+                                $neuro = $dk_tinggiN;
                             }
                             else if($value->neuro == "rendah"){
-                                $value->neuro = $dk_rendahN;
+                                $neuro = $dk_rendahN;
                             }
                             //pengecekan terhadap open rendah
                             if($dk_rendahO == 0){
@@ -7206,10 +7229,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "sedang"){
-                                    $value->open = $dk_sedangO;
+                                    $open = $dk_sedangO;
                                 }
                                 else if($value->open == "tinggi"){
-                                    $value->open = $dk_tinggiO;
+                                    $open = $dk_tinggiO;
                                 }
                             }
                             //pengecekan terhadap open sedang
@@ -7230,10 +7253,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "rendah"){
-                                    $value->open = $dk_rendahO;
+                                    $open = $dk_rendahO;
                                 }
                                 else if($value->open == "tinggi"){
-                                    $value->open = $dk_tinggiO;
+                                    $open = $dk_tinggiO;
                                 }
                             }
                             //pengecekan terhadap open tinggi
@@ -7254,10 +7277,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "sedang"){
-                                    $value->open = $dk_sedangO;
+                                    $open = $dk_sedangO;
                                 }
                                 else if($value->open == "rendah"){
-                                    $value->open = $dk_rendahO;
+                                    $open = $dk_rendahO;
                                 }
                             }
                         }
@@ -7279,10 +7302,10 @@ class FuzzyController extends Controller
                                 }
                             }
                             else if($value->neuro == "rendah"){
-                                $value->cons = $dk_rendahN;
+                                $neuro = $dk_rendahN;
                             }
                             else if($value->neuro == "sedang"){
-                                $value->cons = $dk_sedangN;
+                                $neuro = $dk_sedangN;
                             }
                             //pengecekan terhadap open rendah
                             if($dk_rendahO == 0){
@@ -7302,10 +7325,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "sedang"){
-                                    $value->open = $dk_sedangO;
+                                    $open = $dk_sedangO;
                                 }
                                 else if($value->open == "tinggi"){
-                                    $value->open = $dk_tinggiO;
+                                    $open = $dk_tinggiO;
                                 }
                             }
                             //pengecekan terhadap open sedang
@@ -7326,10 +7349,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "rendah"){
-                                    $value->open = $dk_rendahO;
+                                    $open = $dk_rendahO;
                                 }
                                 else if($value->open == "tinggi"){
-                                    $value->open = $dk_tinggiO;
+                                    $open = $dk_tinggiO;
                                 }
                             }
                             //pengecekan terhadap open tinggi
@@ -7350,10 +7373,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "sedang"){
-                                    $value->open = $dk_sedangO;
+                                    $open = $dk_sedangO;
                                 }
                                 else if($value->open == "rendah"){
-                                    $value->open = $dk_rendahO;
+                                    $open = $dk_rendahO;
                                 }
                             }
                         }
@@ -7377,10 +7400,10 @@ class FuzzyController extends Controller
                             }
                         }
                         else if($value->cons == "rendah"){
-                            $value->cons = $dk_rendahC;
+                            $cons = $dk_rendahC;
                         }
                         else if($value->cons == "tinggi"){
-                            $value->cons = $dk_tinggiC;
+                            $cons = $dk_tinggiC;
                         }
                         //pengecekan terhadap neuro rendah
                         if($dk_rendahN == 0){
@@ -7400,10 +7423,10 @@ class FuzzyController extends Controller
                                 }
                             }
                             else if($value->neuro == "tinggi"){
-                                $value->neuro = $dk_tinggiN;
+                                $neuro = $dk_tinggiN;
                             }
                             else if($value->neuro == "sedang"){
-                                $value->neuro = $dk_sedangN;
+                                $neuro = $dk_sedangN;
                             }
                             //pengecekan terhadap open rendah
                             if($dk_rendahO == 0){
@@ -7423,10 +7446,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "sedang"){
-                                    $value->open = $dk_sedangO;
+                                    $open = $dk_sedangO;
                                 }
                                 else if($value->open == "tinggi"){
-                                    $value->open = $dk_tinggiO;
+                                    $open = $dk_tinggiO;
                                 }
                             }
                             //pengecekan terhadap open sedang
@@ -7447,10 +7470,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "rendah"){
-                                    $value->open = $dk_rendahO;
+                                    $open = $dk_rendahO;
                                 }
                                 else if($value->open == "tinggi"){
-                                    $value->open = $dk_tinggiO;
+                                    $open = $dk_tinggiO;
                                 }
                             }
                             //pengecekan terhadap open tinggi
@@ -7471,10 +7494,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "sedang"){
-                                    $value->open = $dk_sedangO;
+                                    $open = $dk_sedangO;
                                 }
                                 else if($value->open == "rendah"){
-                                    $value->open = $dk_rendahO;
+                                    $open = $dk_rendahO;
                                 }
                             }
                         }
@@ -7496,10 +7519,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->neuro == "tinggi"){
-                                    $value->neuro = $dk_tinggiN;
+                                    $neuro = $dk_tinggiN;
                                 }
                                 else if($value->neuro == "rendah"){
-                                    $value->neuro = $dk_rendahN;
+                                    $neuro = $dk_rendahN;
                                 }
                                 //pengecekan terhadap open rendah
                                 if($dk_rendahO == 0){
@@ -7519,10 +7542,10 @@ class FuzzyController extends Controller
                                         }
                                     }
                                     else if($value->open == "sedang"){
-                                        $value->open = $dk_sedangO;
+                                        $open = $dk_sedangO;
                                     }
                                     else if($value->open == "tinggi"){
-                                        $value->open = $dk_tinggiO;
+                                        $open = $dk_tinggiO;
                                     }
                                 }
                                 //pengecekan terhadap open sedang
@@ -7543,10 +7566,10 @@ class FuzzyController extends Controller
                                         }
                                     }
                                     else if($value->open == "rendah"){
-                                        $value->open = $dk_rendahO;
+                                        $open = $dk_rendahO;
                                     }
                                     else if($value->open == "tinggi"){
-                                        $value->open = $dk_tinggiO;
+                                        $open = $dk_tinggiO;
                                     }
                                 }
                                 //pengecekan terhadap open tinggi
@@ -7567,10 +7590,10 @@ class FuzzyController extends Controller
                                         }
                                     }
                                     else if($value->open == "sedang"){
-                                        $value->open = $dk_sedangO;
+                                        $open = $dk_sedangO;
                                     }
                                     else if($value->open == "rendah"){
-                                        $value->open = $dk_rendahO;
+                                        $open = $dk_rendahO;
                                     }
                                 }
                             }
@@ -7592,10 +7615,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->neuro == "rendah"){
-                                    $value->cons = $dk_rendahN;
+                                    $neuro = $dk_rendahN;
                                 }
                                 else if($value->neuro == "sedang"){
-                                    $value->cons = $dk_sedangN;
+                                    $neuro = $dk_sedangN;
                                 }
                                 //pengecekan terhadap open rendah
                                 if($dk_rendahO == 0){
@@ -7615,10 +7638,10 @@ class FuzzyController extends Controller
                                         }
                                     }
                                     else if($value->open == "sedang"){
-                                        $value->open = $dk_sedangO;
+                                        $open = $dk_sedangO;
                                     }
                                     else if($value->open == "tinggi"){
-                                        $value->open = $dk_tinggiO;
+                                        $open = $dk_tinggiO;
                                     }
                                 }
                                 //pengecekan terhadap open sedang
@@ -7639,10 +7662,10 @@ class FuzzyController extends Controller
                                         }
                                     }
                                     else if($value->open == "rendah"){
-                                        $value->open = $dk_rendahO;
+                                        $open = $dk_rendahO;
                                     }
                                     else if($value->open == "tinggi"){
-                                        $value->open = $dk_tinggiO;
+                                        $open = $dk_tinggiO;
                                     }
                                 }
                                 //pengecekan terhadap open tinggi
@@ -7663,10 +7686,10 @@ class FuzzyController extends Controller
                                         }
                                     }
                                     else if($value->open == "sedang"){
-                                        $value->open = $dk_sedangO;
+                                        $open = $dk_sedangO;
                                     }
                                     else if($value->open == "rendah"){
-                                        $value->open = $dk_rendahO;
+                                        $open = $dk_rendahO;
                                     }
                                 }
                             }
@@ -7689,10 +7712,10 @@ class FuzzyController extends Controller
                                 }
                             }
                             else if($value->cons == "rendah"){
-                                $value->cons = $dk_rendahC;
+                                $cons = $dk_rendahC;
                             }
                             else if($value->cons == "sedang"){
-                                $value->cons = $dk_sedangC;
+                                $cons = $dk_sedangC;
                             }
                             //pengecekan terhadap neuro rendah
                             if($dk_rendahN == 0){
@@ -7712,10 +7735,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->neuro == "tinggi"){
-                                    $value->neuro = $dk_tinggiN;
+                                    $neuro = $dk_tinggiN;
                                 }
                                 else if($value->neuro == "sedang"){
-                                    $value->neuro = $dk_sedangN;
+                                    $neuro = $dk_sedangN;
                                 }
                                 //pengecekan terhadap open rendah
                                 if($dk_rendahO == 0){
@@ -7735,10 +7758,10 @@ class FuzzyController extends Controller
                                         }
                                     }
                                     else if($value->open == "tinggi"){
-                                        $value->open = $dk_tinggiO;
+                                        $open = $dk_tinggiO;
                                     }
                                     else if($value->open == "sedang"){
-                                        $value->open = $dk_sedangO;
+                                        $open = $dk_sedangO;
                                     }
                                 }
                                 //pengecekan terhadap open sedang
@@ -7759,10 +7782,10 @@ class FuzzyController extends Controller
                                         }
                                     }
                                     else if($value->open == "tinggi"){
-                                        $value->open = $dk_tinggiO;
+                                        $open = $dk_tinggiO;
                                     }
                                     else if($value->open == "rendah"){
-                                        $value->open = $dk_rendahO;
+                                        $open = $dk_rendahO;
                                     }
                                 }
                                 //pengecekan terhadap open tinggi
@@ -7783,10 +7806,10 @@ class FuzzyController extends Controller
                                         }
                                     }
                                     else if($value->open == "sedang"){
-                                        $value->open = $dk_sedangO;
+                                        $open = $dk_sedangO;
                                     }
                                     else if($value->open == "rendah"){
-                                        $value->open = $dk_rendahO;
+                                        $open = $dk_rendahO;
                                     }
                                 }
                             }
@@ -7808,10 +7831,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->neuro == "tinggi"){
-                                    $value->neuro = $dk_tinggiN;
+                                    $neuro = $dk_tinggiN;
                                 }
                                 else if($value->neuro == "rendah"){
-                                    $value->neuro = $dk_rendahN;
+                                    $neuro = $dk_rendahN;
                                 }
                                 //pengecekan terhadap open rendah
                                 if($dk_rendahO == 0){
@@ -7831,10 +7854,10 @@ class FuzzyController extends Controller
                                         }
                                     }
                                     else if($value->open == "sedang"){
-                                        $value->open = $dk_sedangO;
+                                        $open = $dk_sedangO;
                                     }
                                     else if($value->open == "tinggi"){
-                                        $value->open = $dk_tinggiO;
+                                        $open = $dk_tinggiO;
                                     }
                                 }
                                 //pengecekan terhadap open sedang
@@ -7855,10 +7878,10 @@ class FuzzyController extends Controller
                                         }
                                     }
                                     else if($value->open == "rendah"){
-                                        $value->open = $dk_rendahO;
+                                        $open = $dk_rendahO;
                                     }
                                     else if($value->open == "tinggi"){
-                                        $value->open = $dk_tinggiO;
+                                        $open = $dk_tinggiO;
                                     }
                                 }
                                 //pengecekan terhadap open tinggi
@@ -7879,10 +7902,10 @@ class FuzzyController extends Controller
                                         }
                                     }
                                     else if($value->open == "sedang"){
-                                        $value->open = $dk_sedangO;
+                                        $open = $dk_sedangO;
                                     }
                                     else if($value->open == "rendah"){
-                                        $value->open = $dk_rendahO;
+                                        $open = $dk_rendahO;
                                     }
                                 }
                             }
@@ -7904,10 +7927,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->neuro == "rendah"){
-                                    $value->cons = $dk_rendahN;
+                                    $neuro = $dk_rendahN;
                                 }
                                 else if($value->neuro == "sedang"){
-                                    $value->cons = $dk_sedangN;
+                                    $neuro = $dk_sedangN;
                                 }
                                 //pengecekan terhadap open rendah
                                 if($dk_rendahO == 0){
@@ -7927,10 +7950,10 @@ class FuzzyController extends Controller
                                         }
                                     }
                                     else if($value->open == "sedang"){
-                                        $value->open = $dk_sedangO;
+                                        $open = $dk_sedangO;
                                     }
                                     else if($value->open == "tinggi"){
-                                        $value->open = $dk_tinggiO;
+                                        $open = $dk_tinggiO;
                                     }
                                 }
                                 //pengecekan terhadap open sedang
@@ -7951,10 +7974,10 @@ class FuzzyController extends Controller
                                         }
                                     }
                                     else if($value->open == "rendah"){
-                                        $value->open = $dk_rendahO;
+                                        $open = $dk_rendahO;
                                     }
                                     else if($value->open == "tinggi"){
-                                        $value->open = $dk_tinggiO;
+                                        $open = $dk_tinggiO;
                                     }
                                 }
                                 //pengecekan terhadap open tinggi
@@ -7975,10 +7998,10 @@ class FuzzyController extends Controller
                                         }
                                     }
                                     else if($value->open == "sedang"){
-                                        $value->open = $dk_sedangO;
+                                        $open = $dk_sedangO;
                                     }
                                     else if($value->open == "rendah"){
-                                        $value->open = $dk_rendahO;
+                                        $open = $dk_rendahO;
                                     }
                                 }
                             }
@@ -8003,10 +8026,10 @@ class FuzzyController extends Controller
                         }
                     }
                     else if($value->agree == "rendah"){
-                        $value->agree = $dk_rendahA;
+                        $agree = $dk_rendahA;
                     }
                     else if($value->agree == "sedang"){
-                        $value->agree = $dk_sedangA;
+                        $agree = $dk_sedangA;
                     }
                     //pengecekan terhadap cons rendah
                     if($dk_rendahC == 0){
@@ -8026,10 +8049,10 @@ class FuzzyController extends Controller
                             }
                         }
                         else if($value->cons == "sedang"){
-                            $value->cons = $dk_sedangC;
+                            $cons = $dk_sedangC;
                         }
                         else if($value->cons == "tinggi"){
-                            $value->cons = $dk_tinggiC;
+                            $cons = $dk_tinggiC;
                         }
                         //pengecekan terhadap neuro rendah
                         if($dk_rendahN == 0){
@@ -8049,10 +8072,12 @@ class FuzzyController extends Controller
                                 }
                             }
                             else if($value->neuro == "tinggi"){
-                                $value->neuro = $dk_tinggiN;
+                                $neuro = $dk_tinggiN;
+                                //$neuro = $dk_tinggiN;
                             }
                             else if($value->neuro == "sedang"){
-                                $value->neuro = $dk_sedangN;
+                                $neuro = $dk_sedangN;
+                                //$neuro = $dk_sedangN;
                             }
                             //pengecekan terhadap open rendah
                             if($dk_rendahO == 0){
@@ -8072,10 +8097,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "sedang"){
-                                    $value->open = $dk_sedangO;
+                                    $open = $dk_sedangO;
                                 }
                                 else if($value->open == "tinggi"){
-                                    $value->open = $dk_tinggiO;
+                                    $open = $dk_tinggiO;
                                 }
                             }
                             //pengecekan terhadap open sedang
@@ -8096,10 +8121,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "rendah"){
-                                    $value->open = $dk_rendahO;
+                                    $open = $dk_rendahO;
                                 }
                                 else if($value->open == "tinggi"){
-                                    $value->open = $dk_tinggiO;
+                                    $open = $dk_tinggiO;
                                 }
                             }
                             //pengecekan terhadap open tinggi
@@ -8120,10 +8145,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "sedang"){
-                                    $value->open = $dk_sedangO;
+                                    $open = $dk_sedangO;
                                 }
                                 else if($value->open == "rendah"){
-                                    $value->open = $dk_rendahO;
+                                    $open = $dk_rendahO;
                                 }
                             }
                         }
@@ -8145,10 +8170,12 @@ class FuzzyController extends Controller
                                 }
                             }
                             else if($value->neuro == "tinggi"){
-                                $value->neuro = $dk_tinggiN;
+                                $neuro = $dk_tinggiN;
+                                //$neuro = $dk_tinggiN;
                             }
                             else if($value->neuro == "rendah"){
-                                $value->neuro = $dk_rendahN;
+                                $neuro = $dk_rendahN;
+                                //$neuro = $dk_rendahN;
                             }
                             //pengecekan terhadap open rendah
                             if($dk_rendahO == 0){
@@ -8168,10 +8195,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "sedang"){
-                                    $value->open = $dk_sedangO;
+                                    $open = $dk_sedangO;
                                 }
                                 else if($value->open == "tinggi"){
-                                    $value->open = $dk_tinggiO;
+                                    $open = $dk_tinggiO;
                                 }
                             }
                             //pengecekan terhadap open sedang
@@ -8192,10 +8219,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "rendah"){
-                                    $value->open = $dk_rendahO;
+                                    $open = $dk_rendahO;
                                 }
                                 else if($value->open == "tinggi"){
-                                    $value->open = $dk_tinggiO;
+                                    $open = $dk_tinggiO;
                                 }
                             }
                             //pengecekan terhadap open tinggi
@@ -8216,10 +8243,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "sedang"){
-                                    $value->open = $dk_sedangO;
+                                    $open = $dk_sedangO;
                                 }
                                 else if($value->open == "rendah"){
-                                    $value->open = $dk_rendahO;
+                                    $open = $dk_rendahO;
                                 }
                             }
                         }
@@ -8241,10 +8268,10 @@ class FuzzyController extends Controller
                                 }
                             }
                             else if($value->neuro == "rendah"){
-                                $value->cons = $dk_rendahN;
+                                $neuro = $dk_rendahN;
                             }
                             else if($value->neuro == "sedang"){
-                                $value->cons = $dk_sedangN;
+                                $neuro = $dk_sedangN;
                             }
                             //pengecekan terhadap open rendah
                             if($dk_rendahO == 0){
@@ -8264,10 +8291,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "sedang"){
-                                    $value->open = $dk_sedangO;
+                                    $open = $dk_sedangO;
                                 }
                                 else if($value->open == "tinggi"){
-                                    $value->open = $dk_tinggiO;
+                                    $open = $dk_tinggiO;
                                 }
                             }
                             //pengecekan terhadap open sedang
@@ -8288,10 +8315,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "rendah"){
-                                    $value->open = $dk_rendahO;
+                                    $open = $dk_rendahO;
                                 }
                                 else if($value->open == "tinggi"){
-                                    $value->open = $dk_tinggiO;
+                                    $open = $dk_tinggiO;
                                 }
                             }
                             //pengecekan terhadap open tinggi
@@ -8312,10 +8339,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "sedang"){
-                                    $value->open = $dk_sedangO;
+                                    $open = $dk_sedangO;
                                 }
                                 else if($value->open == "rendah"){
-                                    $value->open = $dk_rendahO;
+                                    $open = $dk_rendahO;
                                 }
                             }
                         }
@@ -8339,10 +8366,12 @@ class FuzzyController extends Controller
                             }
                         }
                         else if($value->cons == "rendah"){
-                            $value->cons = $dk_rendahC;
+                            $cons = $dk_rendahC;
+                            //$cons = $dk_rendahC;
                         }
                         else if($value->cons == "tinggi"){
-                            $value->cons = $dk_tinggiC;
+                            $cons = $dk_tinggiC;
+                            //$cons = $dk_tinggiC;
                         }
                         //pengecekan terhadap neuro rendah
                         if($dk_rendahN == 0){
@@ -8362,10 +8391,12 @@ class FuzzyController extends Controller
                                 }
                             }
                             else if($value->neuro == "tinggi"){
-                                $value->neuro = $dk_tinggiN;
+                                $neuro = $dk_tinggiN;
+                                //$neuro = $dk_tinggiN;
                             }
                             else if($value->neuro == "sedang"){
-                                $value->neuro = $dk_sedangN;
+                                $neuro = $dk_sedangN;
+                                //$neuro = $dk_sedangN;
                             }
                             //pengecekan terhadap open rendah
                             if($dk_rendahO == 0){
@@ -8385,10 +8416,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "sedang"){
-                                    $value->open = $dk_sedangO;
+                                    $open = $dk_sedangO;
                                 }
                                 else if($value->open == "tinggi"){
-                                    $value->open = $dk_tinggiO;
+                                    $open = $dk_tinggiO;
                                 }
                             }
                             //pengecekan terhadap open sedang
@@ -8409,10 +8440,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "rendah"){
-                                    $value->open = $dk_rendahO;
+                                    $open = $dk_rendahO;
                                 }
                                 else if($value->open == "tinggi"){
-                                    $value->open = $dk_tinggiO;
+                                    $open = $dk_tinggiO;
                                 }
                             }
                             //pengecekan terhadap open tinggi
@@ -8433,10 +8464,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->open == "sedang"){
-                                    $value->open = $dk_sedangO;
+                                    $open = $dk_sedangO;
                                 }
                                 else if($value->open == "rendah"){
-                                    $value->open = $dk_rendahO;
+                                    $open = $dk_rendahO;
                                 }
                             }
                         }
@@ -8458,10 +8489,12 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->neuro == "tinggi"){
-                                    $value->neuro = $dk_tinggiN;
+                                    $neuro = $dk_tinggiN;
+                                    //$neuro = $dk_tinggiN;
                                 }
                                 else if($value->neuro == "rendah"){
-                                    $value->neuro = $dk_rendahN;
+                                    $neuro = $dk_rendahN;
+                                    //$neuro = $dk_rendahN;
                                 }
                                 //pengecekan terhadap open rendah
                                 if($dk_rendahO == 0){
@@ -8481,10 +8514,10 @@ class FuzzyController extends Controller
                                         }
                                     }
                                     else if($value->open == "sedang"){
-                                        $value->open = $dk_sedangO;
+                                        $open = $dk_sedangO;
                                     }
                                     else if($value->open == "tinggi"){
-                                        $value->open = $dk_tinggiO;
+                                        $open = $dk_tinggiO;
                                     }
                                 }
                                 //pengecekan terhadap open sedang
@@ -8505,10 +8538,10 @@ class FuzzyController extends Controller
                                         }
                                     }
                                     else if($value->open == "rendah"){
-                                        $value->open = $dk_rendahO;
+                                        $open = $dk_rendahO;
                                     }
                                     else if($value->open == "tinggi"){
-                                        $value->open = $dk_tinggiO;
+                                        $open = $dk_tinggiO;
                                     }
                                 }
                                 //pengecekan terhadap open tinggi
@@ -8529,10 +8562,10 @@ class FuzzyController extends Controller
                                         }
                                     }
                                     else if($value->open == "sedang"){
-                                        $value->open = $dk_sedangO;
+                                        $open = $dk_sedangO;
                                     }
                                     else if($value->open == "rendah"){
-                                        $value->open = $dk_rendahO;
+                                        $open = $dk_rendahO;
                                     }
                                 }
                             }
@@ -8554,10 +8587,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->neuro == "rendah"){
-                                    $value->cons = $dk_rendahN;
+                                    $neuro = $dk_rendahN;
                                 }
                                 else if($value->neuro == "sedang"){
-                                    $value->cons = $dk_sedangN;
+                                    $neuro = $dk_sedangN;
                                 }
                                 //pengecekan terhadap open rendah
                                 if($dk_rendahO == 0){
@@ -8577,10 +8610,10 @@ class FuzzyController extends Controller
                                         }
                                     }
                                     else if($value->open == "sedang"){
-                                        $value->open = $dk_sedangO;
+                                        $open = $dk_sedangO;
                                     }
                                     else if($value->open == "tinggi"){
-                                        $value->open = $dk_tinggiO;
+                                        $open = $dk_tinggiO;
                                     }
                                 }
                                 //pengecekan terhadap open sedang
@@ -8601,10 +8634,10 @@ class FuzzyController extends Controller
                                         }
                                     }
                                     else if($value->open == "rendah"){
-                                        $value->open = $dk_rendahO;
+                                        $open = $dk_rendahO;
                                     }
                                     else if($value->open == "tinggi"){
-                                        $value->open = $dk_tinggiO;
+                                        $open = $dk_tinggiO;
                                     }
                                 }
                                 //pengecekan terhadap open tinggi
@@ -8625,10 +8658,10 @@ class FuzzyController extends Controller
                                         }
                                     }
                                     else if($value->open == "sedang"){
-                                        $value->open = $dk_sedangO;
+                                        $open = $dk_sedangO;
                                     }
                                     else if($value->open == "rendah"){
-                                        $value->open = $dk_rendahO;
+                                        $open = $dk_rendahO;
                                     }
                                 }
                             }
@@ -8651,10 +8684,10 @@ class FuzzyController extends Controller
                                 }
                             }
                             else if($value->cons == "rendah"){
-                                $value->cons = $dk_rendahC;
+                                $cons = $dk_rendahC;
                             }
                             else if($value->cons == "sedang"){
-                                $value->cons = $dk_sedangC;
+                                $cons = $dk_sedangC;
                             }
                             //pengecekan terhadap neuro rendah
                             if($dk_rendahN == 0){
@@ -8674,10 +8707,12 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->neuro == "tinggi"){
-                                    $value->neuro = $dk_tinggiN;
+                                    $neuro = $dk_tinggiN;
+                                    //$neuro = $dk_tinggiN;
                                 }
                                 else if($value->neuro == "sedang"){
-                                    $value->neuro = $dk_sedangN;
+                                    $neuro = $dk_sedangN;
+                                    //$neuro = $dk_sedangN;
                                 }
                                 //pengecekan terhadap open rendah
                                 if($dk_rendahO == 0){
@@ -8697,10 +8732,10 @@ class FuzzyController extends Controller
                                         }
                                     }
                                     else if($value->open == "tinggi"){
-                                        $value->open = $dk_tinggiO;
+                                        $open = $dk_tinggiO;
                                     }
                                     else if($value->open == "sedang"){
-                                        $value->open = $dk_sedangO;
+                                        $open = $dk_sedangO;
                                     }
                                 }
                                 //pengecekan terhadap open sedang
@@ -8721,10 +8756,10 @@ class FuzzyController extends Controller
                                         }
                                     }
                                     else if($value->open == "tinggi"){
-                                        $value->open = $dk_tinggiO;
+                                        $open = $dk_tinggiO;
                                     }
                                     else if($value->open == "rendah"){
-                                        $value->open = $dk_rendahO;
+                                        $open = $dk_rendahO;
                                     }
                                 }
                                 //pengecekan terhadap open tinggi
@@ -8745,10 +8780,10 @@ class FuzzyController extends Controller
                                         }
                                     }
                                     else if($value->open == "sedang"){
-                                        $value->open = $dk_sedangO;
+                                        $open = $dk_sedangO;
                                     }
                                     else if($value->open == "rendah"){
-                                        $value->open = $dk_rendahO;
+                                        $open = $dk_rendahO;
                                     }
                                 }
                             }
@@ -8770,10 +8805,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->neuro == "tinggi"){
-                                    $value->neuro = $dk_tinggiN;
+                                    $neuro = $dk_tinggiN;
                                 }
                                 else if($value->neuro == "rendah"){
-                                    $value->neuro = $dk_rendahN;
+                                    $neuro = $dk_rendahN;
                                 }
                                 //pengecekan terhadap open rendah
                                 if($dk_rendahO == 0){
@@ -8793,10 +8828,10 @@ class FuzzyController extends Controller
                                         }
                                     }
                                     else if($value->open == "sedang"){
-                                        $value->open = $dk_sedangO;
+                                        $open = $dk_sedangO;
                                     }
                                     else if($value->open == "tinggi"){
-                                        $value->open = $dk_tinggiO;
+                                        $open = $dk_tinggiO;
                                     }
                                 }
                                 //pengecekan terhadap open sedang
@@ -8817,10 +8852,10 @@ class FuzzyController extends Controller
                                         }
                                     }
                                     else if($value->open == "rendah"){
-                                        $value->open = $dk_rendahO;
+                                        $open = $dk_rendahO;
                                     }
                                     else if($value->open == "tinggi"){
-                                        $value->open = $dk_tinggiO;
+                                        $open = $dk_tinggiO;
                                     }
                                 }
                                 //pengecekan terhadap open tinggi
@@ -8841,10 +8876,10 @@ class FuzzyController extends Controller
                                         }
                                     }
                                     else if($value->open == "sedang"){
-                                        $value->open = $dk_sedangO;
+                                        $open = $dk_sedangO;
                                     }
                                     else if($value->open == "rendah"){
-                                        $value->open = $dk_rendahO;
+                                        $open = $dk_rendahO;
                                     }
                                 }
                             }
@@ -8866,10 +8901,10 @@ class FuzzyController extends Controller
                                     }
                                 }
                                 else if($value->neuro == "rendah"){
-                                    $value->cons = $dk_rendahN;
+                                    $neuro = $dk_rendahN;
                                 }
                                 else if($value->neuro == "sedang"){
-                                    $value->cons = $dk_sedangN;
+                                    $neuro = $dk_sedangN;
                                 }
                                 //pengecekan terhadap open rendah
                                 if($dk_rendahO == 0){
@@ -8889,10 +8924,10 @@ class FuzzyController extends Controller
                                         }
                                     }
                                     else if($value->open == "sedang"){
-                                        $value->open = $dk_sedangO;
+                                        $open = $dk_sedangO;
                                     }
                                     else if($value->open == "tinggi"){
-                                        $value->open = $dk_tinggiO;
+                                        $open = $dk_tinggiO;
                                     }
                                 }
                                 //pengecekan terhadap open sedang
@@ -8913,10 +8948,10 @@ class FuzzyController extends Controller
                                         }
                                     }
                                     else if($value->open == "rendah"){
-                                        $value->open = $dk_rendahO;
+                                        $open = $dk_rendahO;
                                     }
                                     else if($value->open == "tinggi"){
-                                        $value->open = $dk_tinggiO;
+                                        $open = $dk_tinggiO;
                                     }
                                 }
                                 //pengecekan terhadap open tinggi
@@ -8937,10 +8972,10 @@ class FuzzyController extends Controller
                                         }
                                     }
                                     else if($value->open == "sedang"){
-                                        $value->open = $dk_sedangO;
+                                        $open = $dk_sedangO;
                                     }
                                     else if($value->open == "rendah"){
-                                        $value->open = $dk_rendahO;
+                                        $open = $dk_rendahO;
                                     }
                                 }
                             }
@@ -8951,267 +8986,291 @@ class FuzzyController extends Controller
             //cek if 1 extra
             if($dk_tinggiE == 1){
                 if ($value->extra == "tinggi")
-                $value->extra = 1;
+                $extra = 1;
             }
             else if($dk_sedangE == 1){
                 if ($value->extra == "sedang")
-                $value->extra = 1;
+                $extra = 1;
             }
             else if($dk_rendahE == 1){
                 if ($value->extra == "rendah")
-                $value->extra = 1;
+                $extra = 1;
             }
 
             //cek if 1 agree
             if($dk_tinggiA == 1){
                 if ($value->agree == "tinggi")
-                $value->agree = 1;
+                $agree = 1;
             }
             else if($dk_sedangA == 1){
                 if ($value->agree == "sedang")
-                $value->agree = 1;
+                $agree = 1;
             }
             else if($dk_rendahA == 1){
                 if ($value->agree == "rendah")
-                $value->agree = 1;
+                $agree = 1;
             }
 
             //cek if cons
             if($dk_tinggiC == 1){
                 if ($value->cons == "tinggi")
-                $value->cons = 1;
+                $cons = 1;
             }
             else if($dk_sedangC == 1){
                 if ($value->cons == "sedang")
-                $value->cons = 1;
+                $cons = 1;
             }
             else if($dk_rendahC == 1){
                 if ($value->cons == "rendah")
-                $value->cons = 1;
+                $cons = 1;
             }
 
             //cek if neuro
             if($dk_tinggiN == 1){
                 if ($value->neuro == "tinggi")
-                $value->neuro = 1;
+                $neuro = 1;
             }
             else if($dk_sedangN == 1){
                 if ($value->neuro == "sedang")
-                $value->neuro = 1;
+                $neuro = 1;
             }
             else if($dk_rendahN == 1){
                 if ($value->neuro == "rendah")
-                $value->neuro = 1;
+                $neuro = 1;
             }
 
             //cek if open
             if($dk_tinggiO == 1){
                 if ($value->open == "tinggi")
-                $value->open = 1;
+                $open = 1;
             }
             else if($dk_sedangO == 1){
                 if ($value->open == "sedang")
-                $value->open = 1;
+                $open = 1;
             }
             else if($dk_rendahO == 1){
                 if ($value->open == "rendah")
-                $value->open = 1;
-            }
-
-            $array = [];
-
-            $value = $value->open;
-            array_push($array, $value);
-
-            //for($i = 0; $i<count($hasilInferensi); $i++){
-                // foreach($hasilInferensi as $key => $value){   
-                //     $min = array("extra"=>$value->extra, "agree"=>$value->agree, "cons"=>$value->cons,
-                //     "neuro"=>$value->neuro, "open"=>$value->open, "rekom"=>$value->rekomendasi_idkado);
-                
-                //     arsort($min);
-                //     foreach($min as $key => $value){
-                //         $urut = $key . " " . $value;
-                //     }
-                // }   
-            //}
-            //$tes = $value->extra;
-            
-            foreach($hasilInferensi as $key => $value){
-                $extra = $value->extra;
-                $agree = $value->agree;
-                $cons = $value->cons;
-                $neuro = $value->neuro;
-                $open = $value->open;
-
-                if($extra < $agree){
-                    if($extra < $cons){
-                        if($extra < $neuro){
-                            if($extra < $open){
-                                $value->min = $extra;
-                            }
-                            else if ($extra > $open){
-                                $value->min = $open;
-                            }
-                        }
-                        else if($extra > $neuro){
-                            if($neuro < $open){
-                                $value->min = $neuro;
-                            }
-                            if($neuro > $open){
-                                $value->min = $open;
-                            }
-                        }
-                    }
-                    else if($extra > $cons){
-                        if($cons < $neuro){
-                            if ($cons < $open){
-                                $value->min = $cons;
-                            }
-                            else if ($cons > $open)
-                            {
-                                $value->min = $open;
-                            }
-                        }
-                        else if($cons > $neuro){
-                            if ($neuro < $open){
-                                $value->min = $neuro;
-                            }
-                            else if ($neuro > $open){
-                                $value->min = $open;
-                            }
-                        }
-                    }
-                }
-                else if($extra > $agree){
-                    if($agree < $cons){
-                        if($agree < $neuro){
-                            if($agree < $open){
-                                $value->min = $agree;
-                            }
-                            else if($agree> $open){
-                                $value->min = $open;
-                            }
-                        }
-                        else if ($agree > $neuro){
-                            if($neuro < $open){
-                                $value->min = $neuro;
-                            }
-                            else {
-                                $value->min = $open;
-                            }
-                        }
-                    }
-                    else if($agree > $cons){
-                        if($cons < $neuro ){
-                            if($cons < $open){
-                                $value->min = $cons;
-                            }
-                            else if($cons > $open){
-                                $value->min = $open;
-                            }
-                        }
-                    }
-                } 
-            }
-
-            //DEFUZZIFIKASI OUTPUT SETIAP ATURAN INFERENSI
-            $crispOutputE = 0;
-            $crispOutputA = 0;
-            $crispOutputC = 0;
-            $crispOutputN = 0;
-            $crispOutputO = 0;
-
-            foreach($hasilInferensi as $key => $value){
-
-                $extra = floatval($value->extra);
-                $agree = floatval($value->agree);
-                $cons = floatval($value->cons);
-                $neuro = floatval($value->neuro);
-                $open = floatval($value->open);
-
-                //ambil extra
-                if($extra == $dk_rendahE){
-                    $crispOutputE = $dk_rendahE * $cExtra;
-                }
-                else if ($extra == $dk_sedangE){
-                    $crispOutputE = $dk_sedangE * $cExtra;
-                }
-                else if ($extra == $dk_tinggiE){
-                    $crispOutputE = $dk_tinggiE * $cExtra;
-                }
-
-                //ambil agree
-                if($agree == $dk_rendahA){
-                    $crispOutputA = ($dk_rendahA) * $cAgree;
-                }
-                else if ( $agree == $dk_sedangA){
-                    $crispOutputA = ($dk_sedangA) * $cAgree;
-                }
-                else if ($agree == $dk_tinggiA){
-                    $crispOutputA = ($dk_tinggiA) * $cAgree;
-                }
-
-                //ambil cons
-                if($cons == $dk_rendahC){
-                    $crispOutputC = ($dk_rendahC) * $cCons;
-                }
-                else if ($cons == $dk_sedangC){
-                    $crispOutputC = ($dk_sedangC) * $cCons;
-                }
-                else if ($cons == $dk_tinggiC){
-                    $crispOutputC = ($dk_tinggiC) * $cCons;
-                }
-
-                //ambil neuro
-                if($neuro == $dk_rendahN){
-                    $crispOutputN = ($dk_rendahN) * $cNeuro;
-                }
-                else if ($neuro == $dk_sedangN){
-                    $crispOutputN = ($dk_sedangN) * $cNeuro;
-                }
-                else if ($neuro == $dk_tinggiN){
-                    $crispOutputN = ($dk_tinggiN) * $cNeuro;
-                }
-
-                //ambil open
-                if($open == $dk_rendahO){
-                    $crispOutputO = ($dk_rendahO) * $cOpen;
-                }
-                else if ($open == $dk_sedangO){
-                    $crispOutputO = ($dk_sedangO) * $cOpen;
-                }
-                else if ($open == $dk_tinggiO){
-                    $crispOutputO = ($dk_tinggiO) * $cOpen;
-                }
-
-                //Fungsi Implikasi
-                $pembagi = ($extra + $agree + $cons + $neuro + $open);
-                $crispOutputHit = 0;
-                $output = "";
-
-                if ($pembagi != 0){
-                    $crispOutputHit = (($crispOutputE + $crispOutputA + $crispOutputC + $crispOutputN + $crispOutputO)/($pembagi));
-                    if ($crispOutputHit >= 0 & $crispOutputHit <= 30){
-                        $output = "rendah";
-                    }
-                    else if ($crispOutputHit >= 30 & $crispOutputHit <= 70){
-                        $output = "sedang";
-                    }
-                    else if ($crispOutputHit >= 70 & $crispOutputHit <= 100){
-                        $output = "tinggi";
-                    }
-                }
-                
-                
-                $value->output = $output;
+                $open = 1;
             }
         }
 
-        return response()->json($hasilInferensi);
+        foreach($hasilInferensi as $key => $value)
+        {
+            
 
-        //return response()->json([$pembagi, $crispOutputHit]);
+            $_extra = $value->extra;
+            $_agree = $value->agree;
+            $_cons = $value->cons;
+            $_neuro = $value->neuro;
+            $_open = $value->open;
 
+            if($_extra == "rendah"){
+                $ex = $dk_rendahE;
+            }
+            else if($_extra == "sedang"){
+                $ex = $dk_sedangE;
+            }
+            else if($_extra == "tinggi"){
+                $ex = $dk_tinggiE;
+            }
 
-        //return response()->json([$dk_rendahO, $dk_sedangO, $dk_tinggiO]);
+            if($_agree == "rendah"){
+                $ag = $dk_rendahA;
+            }
+            else if($_agree == "sedang"){
+                $ag = $dk_sedangA;
+            }
+            else if($_agree == "tinggi"){
+                $ag = $dk_tinggiA;
+            }
+
+            if($_cons == "rendah"){
+                $co = $dk_rendahC;
+            }
+            else if($_cons == "sedang"){
+                $co = $dk_sedangC;
+            }
+            else if($_cons == "tinggi"){
+                $co = $dk_tinggiC;
+            }
+
+            if($_neuro == "rendah"){
+                $ne = $dk_rendahN;
+            }
+            else if($_neuro == "sedang"){
+                $ne = $dk_sedangN;
+            }
+            else if($_neuro == "tinggi"){
+                $ne = $dk_tinggiN;
+            }
+
+            if($_open == "rendah"){
+                $op = $dk_rendahO;
+            }
+            else if($_open == "sedang"){
+                $op = $dk_sedangO;
+            }
+            else if($_open == "tinggi"){
+                $op = $dk_tinggiO;
+            }
+
+            //masukkan hasil sistem inferensi ke dalam array
+            $array_nilai["id"]= $value->idaturanB5;
+            $array_nilai["extra"]= $ex;
+            $array_nilai["agree"]= $ag;
+            $array_nilai["cons"]= $co;
+            $array_nilai["neuro"]= $ne;
+            $array_nilai["open"] = $op;
+            $array_nilai["rekomendasi"] = $value->rekomendasi_idkado;
+
+            //ambil nilai minimum dari setiap aturan inferensi dan masukkan ke dalam array
+
+            if( $array_nilai["extra"] < $array_nilai["agree"]){
+                if($array_nilai["extra"] < $array_nilai["cons"]){
+                    if($array_nilai["extra"] < $array_nilai["neuro"]){
+                        if($array_nilai["extra"]  < $array_nilai["open"]){
+                            $array_nilai["min"] = $array_nilai["extra"];
+                            array_push($array_min, $array_nilai["extra"]);
+                        }
+                        else if ($array_nilai["extra"] > $array_nilai["open"]){
+                            $array_nilai["min"] = $array_nilai["open"];
+                            array_push($array_min, $array_nilai["open"]);
+                        }
+                    }
+                    else if($array_nilai["extra"] > $array_nilai["neuro"]){
+                        if($array_nilai["neuro"] < $array_nilai["open"]){
+                            $array_nilai["min"] = $array_nilai["neuro"];
+                            array_push($array_min, $array_nilai["neuro"]);
+                        }
+                        if($array_nilai["neuro"] > $array_nilai["open"]){
+                            $array_nilai["min"] = $array_nilai["open"];
+                            array_push($array_min, $array_nilai["open"]);
+                        }
+                    }
+                }
+                else if($array_nilai["extra"] > $array_nilai["cons"]){
+                    if($array_nilai["cons"] < $array_nilai["neuro"]){
+                        if ($array_nilai["cons"] < $array_nilai["open"]){
+                            $array_nilai["min"] = $array_nilai["cons"];
+                            array_push($array_min, $array_nilai["cons"]);
+                        }
+                        else if ($array_nilai["cons"] > $array_nilai["open"])
+                        {
+                            $array_nilai["min"] = $array_nilai["open"];
+                            array_push($array_min, $array_nilai["open"]);
+                        }
+                    }
+                    else if($array_nilai["cons"] > $array_nilai["neuro"]){
+                        if ($array_nilai["neuro"] < $array_nilai["neuro"]){
+                            $array_nilai["min"] = $array_nilai["neuro"];
+                            array_push($array_min, $array_nilai["neuro"]);
+                        }
+                        else if ($array_nilai["neuro"] > $array_nilai["open"]){
+                            $array_nilai["min"] = $array_nilai["open"];
+                            array_push($array_min, $array_nilai["open"]);
+                        }
+                    }
+                }
+            }
+            else if($array_nilai["extra"] > $array_nilai["agree"]){
+                if($array_nilai["agree"] < $array_nilai["cons"]){
+                    if($array_nilai["agree"] < $array_nilai["neuro"]){
+                        if($array_nilai["agree"] < $array_nilai["open"]){
+                            $array_nilai["min"] = $array_nilai["agree"];
+                            array_push($array_min, $array_nilai["agree"]);
+                        }
+                        else if($array_nilai["agree"]> $array_nilai["open"]){
+                            $array_nilai["min"] = $array_nilai["open"];
+                            array_push($array_min, $array_nilai["open"]);
+                        }
+                    }
+                    else if ($array_nilai["agree"] > $array_nilai["neuro"]){
+                        if($array_nilai["neuro"] < $array_nilai["open"]){
+                            $array_nilai["min"] = $array_nilai["neuro"];
+                            array_push($array_min, $array_nilai["neuro"]);
+                        }
+                        else {
+                            $array_nilai["min"] = $array_nilai["open"];
+                            array_push($array_min, $array_nilai["open"]);
+                        }
+                    }
+                }
+                else if($array_nilai["agree"] > $array_nilai["cons"]){
+                    if($array_nilai["cons"] < $array_nilai["neuro"] ){
+                        if($array_nilai["cons"] < $array_nilai["open"]){
+                            $array_nilai["min"] = $array_nilai["cons"];
+                            array_push($array_min, $array_nilai["cons"]);
+                        }
+                        else if($array_nilai["cons"] > $array_nilai["open"]){
+                            $array_nilai["min"] = $array_nilai["open"];
+                            array_push($array_min, $array_nilai["open"]);
+                        }
+                    }
+                }
+            }
+
+            
+            // //tampung keseluruhan array data
+            array_push($kumpulan_nilai, $array_nilai);
+
+            $cZ =0;
+
+            //Defuzzifikasi Pertama (Dicocokkan dengan fungsi keanggotaan output)
+            $cZ = (($array_nilai["extra"] * $cExtra) + ($array_nilai["agree"] * $cAgree) 
+                    + ($array_nilai["open"] * $cOpen) + ($array_nilai["neuro"] * $cNeuro) + ($array_nilai["cons"] * $cCons))/
+                    ($array_nilai["extra"] + $array_nilai["agree"] + $array_nilai["open"] +$array_nilai["neuro"] + $array_nilai["cons"]);
+            if ($cZ >= 0 & $cZ <= 30){
+                $output = "rendah";
+                $z = 30-($array_nilai["min"]*(30-0));
+
+                //tampung z setiap aturan inferensi
+                $array_nilai["z"] = $z;
+            }
+            else if ($cZ >= 30 & $cZ <= 70){
+                $output = "sedang";
+                $z = 70-($array_nilai["min"]*(70-30));
+
+                //tampung z setiap aturan inferensi
+                $array_nilai["z"] = $z;
+            }
+            else if ($cZ >= 70 & $cZ <= 100){
+                $output = "tinggi";
+                $z = 100-($array_nilai["min"]*(100-70));
+
+                //tampung z setiap aturan inferensi
+                $array_nilai["z"] = $z;
+            }
+            
+            array_push($arr_output, $z);
+            
+
+            //DEFUZZIFIKASI
+            //tampung nilai z bagian pembilang dari setiap iterasi
+            $zPembilang = $z * $array_nilai["min"];
+
+            //menjumlahkan seluruh nilai min (penyebut)
+            $total_min = array_sum($array_min);
+
+            //masukkan pembilang ke dalam array
+            array_push($array_sumDef, $zPembilang);
+
+            //jumlahkan seluruh data array
+            $sumZ = array_sum($array_sumDef);
+
+            $def = 1;
+
+            //Implementasi rumus defuzzifikasi
+            if($total_min != 0){
+                $def = $sumZ/$total_min;
+            }
+        }
+
+        //dd($arr_zAtas);
+
+        //return response()->json($hasilInferensi);
+
+        return response()->json($kumpulan_nilai);
+
+        //return response()->json([$dk_rendahN, $dk_sedangN, $dk_tinggiN]);
     }
 }
