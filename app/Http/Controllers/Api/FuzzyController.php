@@ -224,6 +224,9 @@ class FuzzyController extends Controller
 
         $array_min = [];
 
+        $array_selisih = [];
+        $rekom = 0;
+
         $neuro = 0;
         $open = 0;
         $cons = 0;
@@ -9245,7 +9248,7 @@ class FuzzyController extends Controller
             
 
             //DEFUZZIFIKASI
-            //tampung nilai z bagian pembilang dari setiap iterasi
+            //tampung nilai z bagian pembilang dari setiap rules
             $zPembilang = $z * $array_nilai["min"];
 
             //menjumlahkan seluruh nilai min (penyebut)
@@ -9257,19 +9260,37 @@ class FuzzyController extends Controller
             //jumlahkan seluruh data array
             $sumZ = array_sum($array_sumDef);
 
-            $def = 1;
+            $def = 0;
 
-            //Implementasi rumus defuzzifikasi
+            //Implementasi rumus defuzzifikasi 
             if($total_min != 0){
                 $def = $sumZ/$total_min;
             }
+
+            //Cocokkan hasil defuzzifikasi dengan z masing2 rules (dengan cara mencari selisih)
+            $selisih = 0;
+            if($array_nilai["z"] < $def){
+                $selisih = $def - $array_nilai["z"];
+            }
+            else if ($array_nilai["z"] > $def){
+                $selisih = $array_nilai["z"] - $def;
+            }
+            $array_nilai["selisih"] = $selisih;
+            array_push($array_selisih, $selisih);
+            $min_selisih = min($array_selisih);
+
+            if($array_nilai["selisih"] == $min_selisih){
+                $rekom = $array_nilai["rekomendasi"];
+                $idaturan = $array_nilai["id"];
+            }
         }
+        $nama_kat = DB::table('kategori_kado')
+                        ->select('nama')
+                        ->where('idkategori', $rekom)
+                        ->get();
+        
 
-        //dd($arr_zAtas);
-
-        //return response()->json($hasilInferensi);
-
-        return response()->json($kumpulan_nilai);
+        return response()->json($nama_kat);
 
         //return response()->json([$dk_rendahN, $dk_sedangN, $dk_tinggiN]);
     }
